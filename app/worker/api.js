@@ -1,7 +1,9 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 
-var apis	= require(__dirname + '/../lib/worker.js').create();
+var api	= require(__dirname + '/../../lib/worker.js').create();
 
-apis.ready();
+api.ready(function (handle) {
+	handle.close();
+	api.release();
+});
 
-console.log('i am ok');
