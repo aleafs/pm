@@ -2,6 +2,6 @@
 
 var Master	= require('../lib/master.js').create();
 
-Master.register(8080, __dirname + '/apis.js', 2);
+Master.register(8080, __dirname + '/worker/api.js', 2);
 Master.dispatch();
 
