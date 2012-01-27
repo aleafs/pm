@@ -19,19 +19,8 @@ var server	= Http.createServer(function (req, res) {
 	admin.release();
 });
 
-admin.ready(function (handle) {
-	var socket = new Net.Socket({
-		'handle'		: handle,
-		'allowHalfOpen'	: server.allowHalfOpen, 
-	}); 
-
-	socket.readable	= true;
-	socket.writable = true;
-	socket.resume();
-	socket.server	= server;
-
+admin.ready(function (socket) {
 	server.connections++;
 	server.emit('connection', socket);
-	socket.emit('connect');
 });
 

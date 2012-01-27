@@ -2,8 +2,8 @@
 
 var api	= require(__dirname + '/../../lib/cluster.js').create();
 
-api.ready(function (handle) {
-	handle.close();
+api.ready(function (socket) {
+	socket.end('<!--STATUS OK-->\n');
 	api.release();
 });
 
