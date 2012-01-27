@@ -3,6 +3,6 @@
 var Master	= require('../lib/cluster.js').create(true);
 
 Master.register(8080, __dirname + '/worker/api.js', 2);
-Master.register(8080, __dirname + '/worker/api.js', 1);
+Master.register(8000, __dirname + '/worker/admin.js', 1);
 Master.dispatch();
 
