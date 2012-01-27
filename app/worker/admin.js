@@ -6,11 +6,10 @@
  *+------------------------------------------------------------------------
  */
 
-var Net		= require('net');
 var Http	= require('http');
+var Worker	= require(__dirname + '/../../lib/cluster.js').Worker;
 
-var admin	= require(__dirname + '/../../lib/cluster.js').create();
-
+var admin	= new Worker();
 var server	= Http.createServer(function (req, res) {
 	// XXX:
 	//
