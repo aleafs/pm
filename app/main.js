@@ -5,6 +5,6 @@ var Master	= require('../lib/cluster.js').Master;
 app	= new Master();
 
 app.register(8080, __dirname + '/worker/api.js', 1);
-//app.register(8000, __dirname + '/worker/admin.js', 1);
+app.register(8000, __dirname + '/worker/admin.js', 5);
 app.dispatch();
 
