@@ -4,7 +4,14 @@ var Worker	= require(__dirname + '/../../lib/cluster.js').Worker;
 
 api	= new Worker();
 api.ready(function (socket) {
-	socket.end('<!--STATUS OK-->\n');
+	socket.setEncoding('ascii');
+	socket.write('Now: ' + (new Date()) + '\n<- ');
+	socket.on('data', function (data) {
+		socket.write('-> ' + data + '<- ');
+		if ('bye' == data.slice(0, 3).toLowerCase()) {
+			socket.end();
+		}
+	});
 	api.release();
 });
 
