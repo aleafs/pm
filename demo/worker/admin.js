@@ -12,9 +12,9 @@ var Worker	= require(__dirname + '/../../lib/cluster.js').Worker;
 var count	= 0;
 var admin	= new Worker();
 var server	= Http.createServer(function (req, res) {
-	admin.monset('count', ++count);
 	res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
-	res.end('Your request url is: ' + req.url + '\n');
+	res.end('hello world');
+	//res.end('Your request url is: ' + req.url + '\n');
 	admin.release();
 });
 
