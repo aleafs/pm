@@ -4,7 +4,7 @@ var Master	= require('../lib/cluster.js').Master;
 
 app	= new Master();
 
-app.register(8080, __dirname + '/worker/api.js', 1);
-app.register(8000, __dirname + '/worker/admin.js', 1, 10, '<!--ERROR-->\r\n');
+app.register(8080, __dirname + '/worker/api.js', 2, null, 1);
+app.register(33749, __dirname + '/worker/admin.js', 1, '<!--ERROR-->\r\n');
 app.dispatch();
 

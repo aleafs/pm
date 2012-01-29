@@ -10,8 +10,8 @@ api.ready(function (socket) {
 		socket.write('-> ' + data + '<- ');
 		if ('bye' == data.slice(0, 3).toLowerCase()) {
 			socket.end();
+			api.release();
 		}
 	});
-	api.release();
 });
 
