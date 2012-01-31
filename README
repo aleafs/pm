@@ -1,4 +1,0 @@
-
-1. Keep-Alive: 模式下暂时无法做到平滑重启;
-
-2. worker进程中的scores 和 remain 目前非幂等操作，建议在app中进行计数，最好是幂等算法.
