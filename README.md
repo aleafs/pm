@@ -9,6 +9,8 @@ node-cluster 是一个简单易用的 NodeJS 类库，帮助开发人员快速�
 * 支持 master 和 worker 的平滑重启 (SIGTERM)，不丢失请求;
 * 支持通过向 master 发送 SIGUSR1 信号实现所有worker的自动重载.
 
+# 安装
+`npm install node-cluster`
 # 使用
 node-cluster的调用十分简单，核心调用代码不超过10行。请看下面的调用方法。  
 dispatch.js:
@@ -29,7 +31,8 @@ app.js
       server.emit('connection', socket);
     });
 
-执行：`node dispatch.js`
+执行：`node dispatch.js`即可。
+
 #示例
 demo目录下提供了一个典型的示例，你可以通过下列命令启动这个服务：
 
