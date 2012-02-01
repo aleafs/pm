@@ -16,14 +16,13 @@ var server	= Http.createServer(function (req, res) {
 	// 这个值最好能在一个HTTP协议第一个消息包到达的时候进行累加，绑定在 socket 的 data 事件上
 	// 否则在keep-alive模式下，当 worker 需要平滑重启的时候，会有客户端 HTTP 协议包还没发完就被reset了 
 	count++;
-	setTimeout(function() {
-		res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
-		res.end('hello world');
-		admin.release();
 
-		// XXX: 协议内部维护 remain 计数 , 一定要在 release 之后调用
-		admin.monset('remain', --count);
-	}, 200);
+	res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
+	res.end('hello world');
+
+	admin.release();
+	// XXX: 协议内部维护 remain 计数 , 一定要在 release 之后调用
+	admin.monset('remain', --count);
 });
 
 admin.ready(function (socket) {

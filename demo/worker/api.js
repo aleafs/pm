@@ -2,6 +2,10 @@
 
 var Worker	= require(__dirname + '/../../lib/cluster.js').Worker;
 
+/**
+ * @ load some static data sync
+ */
+
 api	= new Worker();
 api.ready(function (socket) {
 	socket.setEncoding('ascii');
