@@ -10,24 +10,24 @@ node-cluster 是一个简单易用的 NodeJS 类库，帮助开发人员快速�
 * 支持通过向 master 发送 SIGUSR1 信号实现所有worker的自动重载.
 
 # 使用
-node-cluster的调用十分简单，核心调用代码不超过10行。请看下面的调用方法。
+node-cluster的调用十分简单，核心调用代码不超过10行。请看下面的调用方法。  
 dispatch.js:
 
-  var cluster = require('node-cluster');
+    var cluster = require('node-cluster');
 
-  var master = new cluster.Master();
-  master.register(8080, 'app.js');
-  master.dispatch();
+    var master = new cluster.Master();
+    master.register(8080, 'app.js');
+    master.dispatch();
 
 app.js
 
-  var server  = http.createServer(function (req, res) {
-    // TODO
-  });
-  var worker = new cluster.Worker();
-  worker.ready(function (socket) {
-    server.emit('connection', socket);
-  });
+    var server  = http.createServer(function (req, res) {
+      // TODO
+    });
+    var worker = new cluster.Worker();
+    worker.ready(function (socket) {
+      server.emit('connection', socket);
+    });
 
 执行：`node dispatch.js`
 #示例
