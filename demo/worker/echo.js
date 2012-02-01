@@ -8,7 +8,7 @@ var Worker  = require(__dirname + '/../../lib/cluster.js').Worker;
 
 api  = new Worker();
 api.ready(function (socket) {
-  api.ping();			/**<	开始一次会话 */
+  api.transact();			/**<	开始一次会话 */
   socket.setEncoding('ascii');
   socket.write('Now: ' + (new Date()) + '\n<- ');
   socket.on('data', function (data) {

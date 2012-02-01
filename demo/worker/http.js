@@ -1,6 +1,6 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 /*+------------------------------------------------------------------------
- * cluster 管理API
+ * HTTP 协议的worker 示例
  *
  * @author : pengchun@taobao.com
  *+------------------------------------------------------------------------
@@ -14,7 +14,7 @@ var REQUEST_QUEQUE = [];
 
 var admin  = new Worker();
 var server  = Http.createServer(function (req, res) {
-  admin.ping();
+  admin.transact();
   REQUEST_QUEQUE.push(REQUEST_QUEQUE.length);
 
   // XXX: DO SOMETHIS
