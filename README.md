@@ -12,7 +12,7 @@ node-cluster 是一个简单易用的 NodeJS 类库，帮助开发人员快速�
 
 demo目录下提供了一个典型的示例，你可以通过下列命令启动这个服务：
 
-	$ nohup node demo/main.js &
+  $ nohup node demo/main.js &
 
 其中:
 
