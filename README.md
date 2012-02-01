@@ -24,8 +24,11 @@ dispatch.js:
 app.js：
 
     var server  = http.createServer(function (req, res) {
+      worker.ping();
       // TODO
+      worker.release();
     });
+
     var worker = new cluster.Worker();
     worker.ready(function (socket) {
       server.emit('connection', socket);
@@ -36,13 +39,13 @@ app.js：
 #示例
 demo目录下提供了一个典型的示例，你可以通过下列命令启动这个服务：
 
-    $ nohup node demo/main.js &
+    $ node demo/main.js &
 
 其中:
 
 * main.js 是master进程，通过 register 方法注册 worker进程，并通过 dispatch 进行工作; 除此之外，master 进程不需要做任何工作，你就可以实现一个高稳定性的生产服务;
-* worker/admin.js 提供了监听在 33749 端口上的 HTTP 服务; 通过NodeJS 原生的http模块实现，demo中仅提供了 hello world的示例;
-* worker/api.js 提供监听在 8080 端口上的Socket应答服务.
+* worker/http.js 提供了监听在 33749 端口上的 HTTP 服务; 通过NodeJS 原生的http模块实现，demo中仅提供了 hello world的示例;
+* worker/echo.js 提供监听在 8080 端口上的Socket应答服务.
 
 # 原理
 

@@ -14,7 +14,7 @@ app.register(
   /**
    * @worker 的路径 (required)
    */
-  __dirname + '/worker/api.js', 
+  __dirname + '/worker/echo.js', 
 
   /**
    * @起多少个进程, 默认为系统CPU数 (optional)
@@ -32,5 +32,5 @@ app.register(
   1
 );
 
-app.register(33749, __dirname + '/worker/admin.js', 1, null, -1);
+app.register(33749, __dirname + '/worker/http.js', 1);
 app.dispatch();

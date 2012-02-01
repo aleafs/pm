@@ -9,30 +9,23 @@
 var Http  = require('http');
 var Worker  = require(__dirname + '/../../lib/cluster.js').Worker;
 
-var count  = 0;
+
+var REQUEST_QUEQUE = [];
+
 var admin  = new Worker();
 var server  = Http.createServer(function (req, res) {
-  // XXX: 
-  // 这个值最好能在一个HTTP协议第一个消息包到达的时候进行累加，绑定在 socket 的 data 事件上
-  // 否则在keep-alive模式下，当 worker 需要平滑重启的时候，会有客户端 HTTP 协议包还没发完就被reset了 
-  count++;
+  admin.ping();
+  REQUEST_QUEQUE.push(REQUEST_QUEQUE.length);
 
+  // XXX: DO SOMETHIS
   res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
   res.end('hello world');
 
-  // XXX: 内部逻辑维护 remain 计数，通过 release 方法回写
-  admin.release(--count);
+  REQUEST_QUEQUE.pop();
+  admin.release(REQUEST_QUEQUE.length);
 });
 
 admin.ready(function (socket) {
-  /**
-  socket.on('data', function (data) {
-    if ( IS_A_NEW_HTTP_REQUEST ) {
-      count++;
-    }
-  });
-  */
-  server.connections++;
   server.emit('connection', socket);
 });
 

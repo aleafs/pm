@@ -8,13 +8,18 @@ var Worker  = require(__dirname + '/../../lib/cluster.js').Worker;
 
 api  = new Worker();
 api.ready(function (socket) {
+  api.ping();			/**<	开始一次会话 */
   socket.setEncoding('ascii');
   socket.write('Now: ' + (new Date()) + '\n<- ');
   socket.on('data', function (data) {
-    socket.write('-> ' + data + '<- ');
     if ('bye' == data.slice(0, 3).toLowerCase()) {
+      socket.write('Good Bye!\n');
       socket.end();
-      api.release();
+      api.release();	/**<	会话结束 */
+    } else {
+      setTimeout(function() {
+        socket.write('-> [ sleep 100ms ] ' + data + '<- ');
+      }, 100);
     }
   });
 });
