@@ -33,6 +33,5 @@ http://club.cnodejs.org/topic/4f16442ccae1f4aa27001081
 
 # 注意
 
-* worker 进程中的 remain 变量，是判断一个 worker 是否空闲的依据; 因此我并不建议采用非幂等的方法进行计数, 在你的应用程序中，我建议采用更优雅的幂等操作对其计数，并且通过 worker.monset('remain', remain.value) 的方法回写;
-* 在Keep-Alive模式下, 请求方一旦建立连接，就和 master 失去了联系，暂时无法做到完全平滑的 worker 重启.
+* worker 进程中的 remain 变量，是判断一个 worker 是否空闲的依据; 因此我强烈建议在你的应用程序 worker 进程中，采用更优雅的幂等操作对其计数，并且通过 worker.monset('remain', remain.value) 的方法回写;
 
