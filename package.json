@@ -1,6 +1,6 @@
 {
   "name": "node-cluster",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Aleafs Zhang (zhangxc83@gmail.com)",
   "homepage": "https://github.com/aleafs/node-cluster",
   "description": "A graceful node library to contribute a permanent \"master-worker\" server.",
