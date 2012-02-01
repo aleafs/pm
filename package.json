@@ -6,7 +6,7 @@
 		"description": "A graceful node library to contribute a permanent \"master-worker\" server.",
 		"dependencies": {},
 		"engines": {
-			"node": "0.5.9+"
+			"node": "0.6.9"
 		},
 		"main": "demo/main.js",
 		"scripts": {}
