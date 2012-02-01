@@ -1,13 +1,13 @@
 {
   "name": "node-cluster",
-    "version": "0.1.0",
-    "author": "Aleafs Zhang (zhangxc83@gmail.com)",
-    "homepage": "https://github.com/aleafs/node-cluster",
-    "description": "A graceful node library to contribute a permanent \"master-worker\" server.",
-    "dependencies": {},
-    "engines": {
-      "node": "0.6.9"
-    },
-    "main": "demo/main.js",
-    "scripts": {}
+  "version": "0.1.0",
+  "author": "Aleafs Zhang (zhangxc83@gmail.com)",
+  "homepage": "https://github.com/aleafs/node-cluster",
+  "description": "A graceful node library to contribute a permanent \"master-worker\" server.",
+  "dependencies": {},
+  "engines": {
+    "node": "0.6.9"
+  },
+  "main": "lib/cluster.js",
+  "scripts": {}
 }
