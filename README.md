@@ -21,7 +21,7 @@ dispatch.js:
     master.register(8080, 'app.js');
     master.dispatch();
 
-app.js
+app.js：
 
     var server  = http.createServer(function (req, res) {
       // TODO
@@ -36,7 +36,7 @@ app.js
 #示例
 demo目录下提供了一个典型的示例，你可以通过下列命令启动这个服务：
 
-  $ nohup node demo/main.js &
+    $ nohup node demo/main.js &
 
 其中:
 
