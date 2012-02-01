@@ -20,9 +20,8 @@ var server  = Http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
   res.end('hello world');
 
-  admin.release();
-  // XXX: 协议内部维护 remain 计数 , 一定要在 release 之后调用
-  admin.monset('remain', --count);
+  // XXX: 内部逻辑维护 remain 计数，通过 release 方法回写
+  admin.release(--count);
 });
 
 admin.ready(function (socket) {
