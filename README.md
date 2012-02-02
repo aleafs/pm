@@ -24,9 +24,7 @@ dispatch.js:
 app.js：
 
     var server  = http.createServer(function (req, res) {
-      worker.ping();
       // TODO
-      worker.release();
     });
 
     var worker = new cluster.Worker();
