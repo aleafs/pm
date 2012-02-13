@@ -47,7 +47,7 @@ demo目录下提供了一个典型的示例，你可以通过下列命令启动�
 
 ## 结合 [connect](https://github.com/senchalabs/connect) 使用
 
-* [dispatch.js](/demo/connect/dispatch.js)
+* [dispatch.js](/fengmk2/node-cluster/blob/master/demo/connect/dispatch.js)
 
 ```
 var cluster = require('node-cluster');
@@ -56,7 +56,7 @@ var master = cluster.Master();
 master.register(19841, __dirname + '/app.js').dispatch();
 ```
 
-* [app.js](/demo/connect/app.js)
+* [app.js](/fengmk2/node-cluster/blob/master/demo/connect/app.js)
 
 ```
 var cluster = require('node-cluster');
