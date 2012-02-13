@@ -48,6 +48,7 @@ demo目录下提供了一个典型的示例，你可以通过下列命令启动�
 ## 结合 [connect](https://github.com/senchalabs/connect) 使用
 
 * [dispatch.js](/demo/connect/dispatch.js)
+
 ```
 var cluster = require('node-cluster');
 
@@ -56,6 +57,7 @@ master.register(19841, __dirname + '/app.js').dispatch();
 ```
 
 * [app.js](/demo/connect/app.js)
+
 ```
 var cluster = require('node-cluster');
 var connect = require('connect');
@@ -73,6 +75,7 @@ admin.ready(function(socket) {
 ```
 
 * start 
+
 ```
 $ node demo/connect/dispatch.js
 ```
