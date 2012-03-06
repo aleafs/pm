@@ -9,7 +9,7 @@
   "engines": {
     "node": ">=0.6.9"
   },
-  "main": "lib/cluster.js",
+  "main": "index.js",
   "devDependencies": {
     "connect": "=1.8.5",
     "should": ">=0.4.2",

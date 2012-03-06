@@ -15,8 +15,13 @@ describe('lib/cluster', function() {
   var master = cluster.Master();
   before(function(done) {
     master.register(37211, __dirname + '/support/app.js');
-    master.register(37212, __dirname + '/support/app.js', 1);
-    master.register(37213, __dirname + '/support/app.js', 3);
+    master.register(37212, __dirname + '/support/app.js', {
+		'cnum'	: 1,
+	});
+    master.register(37213, __dirname + '/support/app.js', {
+		'cnum'	: 3,
+		'user'	: 'nobody',
+	});
     master.dispatch();
     setTimeout(done, 1000);
   });
