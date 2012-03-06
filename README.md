@@ -1,3 +1,6 @@
+
+[![Build Status](https://secure.travis-ci.org/aleafs/node-cluster.png)](http://travis-ci.org/aleafs/node-cluster)
+
 # 特性
 
 node-cluster 是一个简单易用的 NodeJS 类库，帮助开发人员快速地搭建基于NodeJS的服务程序：
