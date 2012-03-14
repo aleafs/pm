@@ -3,7 +3,7 @@
 
 # 特性
 
-node-cluster 是一个简单易用的 NodeJS 类库，帮助开发人员快速地搭建基于NodeJS的服务程序：
+`node-cluster` 是一个简单易用的 NodeJS 类库，帮助开发人员快速地搭建基于NodeJS的服务程序：
 
 * 基于master + worker 模式，能够有效利用多核处理器;
 * 支持多端口监听，master 传递请求端的 socket fd 给各个 worker，性能损失极低;
@@ -13,34 +13,45 @@ node-cluster 是一个简单易用的 NodeJS 类库，帮助开发人员快速�
 * 支持通过向 master 发送 SIGUSR1 信号实现所有worker的自动重载.
 
 # 安装
-`npm install node-cluster`
+
+```bash
+$ npm install node-cluster
+```
+
 # 使用
+
 node-cluster的调用十分简单，核心调用代码不超过10行。请看下面的调用方法。  
 dispatch.js:
 
-    var cluster = require('node-cluster');
+```javascript
+var cluster = require('node-cluster');
 
-    var master = new cluster.Master();
-    master.register(8080, 'app.js');
-    master.dispatch();
+var master = new cluster.Master();
+master.register(8080, 'app.js');
+master.dispatch();
+```
 
 app.js：
 
-    var server  = http.createServer(function (req, res) {
-      // TODO
-    });
+```javascript
+var server  = http.createServer(function (req, res) {
+  // TODO
+});
 
-    var worker = new cluster.Worker();
-    worker.ready(function (socket) {
-      server.emit('connection', socket);
-    });
+var worker = new cluster.Worker();
+worker.ready(function (socket) {
+  server.emit('connection', socket);
+});
+```
 
 执行：`node dispatch.js`即可。
 
 # 示例
 demo目录下提供了一个典型的示例，你可以通过下列命令启动这个服务：
 
-    $ node demo/main.js &
+```bash
+$ node demo/main.js &
+```
 
 其中:
 
@@ -52,7 +63,7 @@ demo目录下提供了一个典型的示例，你可以通过下列命令启动�
 
 * [dispatch.js](/fengmk2/node-cluster/blob/master/demo/connect/dispatch.js)
 
-```
+```javascript
 var cluster = require('node-cluster');
 
 var master = cluster.Master();
@@ -61,7 +72,7 @@ master.register(19841, __dirname + '/app.js').dispatch();
 
 * [app.js](/fengmk2/node-cluster/blob/master/demo/connect/app.js)
 
-```
+```javascript
 var cluster = require('node-cluster');
 var connect = require('connect');
 
@@ -79,17 +90,33 @@ admin.ready(function(socket) {
 
 * start 
 
-```
+```bash
 $ node demo/connect/dispatch.js
 ```
 
 # 原理
 
 请参考我的同事windyrobin的这篇文章：
-http://club.cnodejs.org/topic/4f16442ccae1f4aa27001081 
-本文的 node-cluster 在核心功能的实现原理上没有任何新意，只是对代码的组织做了更友好的封装，同时加入了一些基于稳定性考虑的特性.
+[NodeJs 多核多进程并行框架实作](http://club.cnodejs.org/topic/4f16442ccae1f4aa27001081) 
+
+本文的 `node-cluster` 在核心功能的实现原理上没有任何新意，只是对代码的组织做了更友好的封装，同时加入了一些基于稳定性考虑的特性.
 
 # 注意
 
 * worker 进程中的 remain 变量，是判断一个 worker 是否空闲的依据; 因此我强烈建议在你的应用程序 worker 进程中，采用更优雅的幂等操作对其计数，并且通过 worker.release(remain) 的方法回写;
 
+# Authors
+
+Below is the output from `git-summary`.
+
+```
+ project: node-cluster
+ commits: 74
+ files  : 17
+ authors: 
+    57  aleafs                  77.0%
+     6  Jackson Tian            8.1%
+     6  aleafs zhang            8.1%
+     4  fengmk2                 5.4%
+     1  pengchun                1.4%
+```
