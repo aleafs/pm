@@ -94,6 +94,36 @@ admin.ready(function(socket) {
 $ node demo/connect/dispatch.js
 ```
 
+# 结合[express](https://github.com/visionmedia/express)
+
+感谢[@yuest](https://github.com/yuest) 提供[Express使用说明](https://github.com/aleafs/node-cluster/issues/6#issuecomment-4516724).
+
+```javascript
+var app = require('express').createServer()
+app.get('/error', function(req, res, next) {
+ next(new Error('error'))
+})
+app.error(function(err, req, res) {
+ res.statusCode = 500
+ res.end(err.message)
+})
+
+//app.listen(8080) //没问题
+
+//使用 node-cluster 有问题
+//因为 app 没有触发 listening
+//可以在此加一句
+//app.emit('listening')
+
+var worker = require('node-cluster').Worker()
+worker.ready(function(socket) {
+ app.emit('connection', socket)
+})
+```
+
+不过推荐不使用 `app.error`，而用 `app.use(function(err, req, res, next) {})` 四个参数的 `middleware`
+express 3.0 会去掉 `app.error`
+
 # 原理
 
 请参考我的同事windyrobin的这篇文章：
