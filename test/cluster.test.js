@@ -8,7 +8,14 @@
  * Module dependencies.
  */
 
-var should = require('should');
+if (process.env.JSCOV) {
+    var jscover = require('jscoverage');
+    require = jscover.require(module);
+    require(__dirname + '/../lib/cluster.js', true);
+    process.on('exit', jscover.coverage);
+}
+
+var should  = require('should');
 var cluster = require('../');
 
 describe('lib/cluster', function() {
