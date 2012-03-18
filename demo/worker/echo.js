@@ -16,6 +16,8 @@ api.ready(function (socket) {
       socket.write('Good Bye!\n');
       socket.end();
       api.release();	/**<	会话结束 */
+    } else if ('fatal' == data.slice(0, 5).toLowerCase()) {
+      process.exit(127);
     } else {
       setTimeout(function() {
         socket.write('-> [ sleep 100ms ] ' + data + '<- ');
