@@ -1,5 +1,7 @@
 [![Build Status](https://secure.travis-ci.org/aleafs/node-cluster.png)](http://travis-ci.org/aleafs/node-cluster)
 
+This logo is on the other side of the GFW!
+
 # 特性
 
 `node-cluster` 是一个简单易用的 NodeJS 类库，帮助开发人员快速地搭建基于NodeJS的服务程序：
@@ -27,7 +29,9 @@ var cluster = require('node-cluster');
 
 var master = new cluster.Master();
 master.register(8080, 'app.js');
-master.dispatch();
+master.on('restartgiveup', function(port, msg) {
+  // alert:
+}).dispatch();
 ```
 
 app.js：

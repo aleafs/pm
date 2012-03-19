@@ -2,7 +2,10 @@
 
 var Master  = require('../lib/cluster.js').Master;
 
-var app  = new Master();
+var app  = new Master({
+    'max_fatal_restart'     : 2,
+    'restart_time_window'   : 60,
+});
 
 app.register(
   /**
