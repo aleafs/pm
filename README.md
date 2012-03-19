@@ -28,7 +28,9 @@ var cluster = require('node-cluster');
 
 var master = new cluster.Master();
 master.register(8080, 'app.js');
-master.dispatch();
+master.on('restartgiveup', function(port, msg) {
+  // alert:
+}).dispatch();
 ```
 
 app.js：
