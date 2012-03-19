@@ -1,5 +1,6 @@
-
 [![Build Status](https://secure.travis-ci.org/aleafs/node-cluster.png)](http://travis-ci.org/aleafs/node-cluster)
+
+This logo is on the other side of the GFW!
 
 # 特性
 
