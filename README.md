@@ -144,12 +144,12 @@ Below is the output from `git-summary`.
 
 ```
  project: node-cluster
- commits: 74
- files  : 17
+ commits: 83
+ files  : 16
  authors: 
-    57  aleafs                  77.0%
-     6  Jackson Tian            8.1%
-     6  aleafs zhang            8.1%
-     4  fengmk2                 5.4%
-     1  pengchun                1.4%
+    62  aleafs                  74.7%
+     8  fengmk2                 9.6%
+     6  Jackson Tian            7.2%
+     6  aleafs zhang            7.2%
+     1  pengchun                1.2%
 ```
