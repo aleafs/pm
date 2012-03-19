@@ -1,13 +1,12 @@
-
 [![Build Status](https://secure.travis-ci.org/aleafs/node-cluster.png)](http://travis-ci.org/aleafs/node-cluster)
 
 # 特性
 
 `node-cluster` 是一个简单易用的 NodeJS 类库，帮助开发人员快速地搭建基于NodeJS的服务程序：
 
-* 基于master + worker 模式，能够有效利用多核处理器;
+* 基于 master + worker 模式，能够有效利用多核处理器;
 * 支持多端口监听，master 传递请求端的 socket fd 给各个 worker，性能损失极低;
-* 同一端口下的多个worker之间提供简单的负载均衡支持;
+* 同一端口下的多个 worker 之间提供简单的负载均衡支持;
 * 支持对 worker 进程数的监控，支持单个 worker 根据已处理的请求数自动消亡;
 * 支持 master 和 worker 的平滑重启 (SIGTERM)，不丢失请求;
 * 支持通过向 master 发送 SIGUSR1 信号实现所有worker的自动重载.
@@ -101,24 +100,24 @@ $ node demo/connect/dispatch.js
 ```javascript
 var app = require('express').createServer()
 app.get('/error', function(req, res, next) {
- next(new Error('error'))
-})
+ next(new Error('error'));
+});
 app.error(function(err, req, res) {
- res.statusCode = 500
- res.end(err.message)
-})
+ res.statusCode = 500;
+ res.end(err.message);
+});
 
-//app.listen(8080) //没问题
+//app.listen(8080); //没问题
 
 //使用 node-cluster 有问题
 //因为 app 没有触发 listening
 //可以在此加一句
-//app.emit('listening')
+//app.emit('listening');
 
-var worker = require('node-cluster').Worker()
+var worker = require('node-cluster').Worker();
 worker.ready(function(socket) {
- app.emit('connection', socket)
-})
+ app.emit('connection', socket);
+});
 ```
 
 不过推荐不使用 `app.error`，而用 `app.use(function(err, req, res, next) {})` 四个参数的 `middleware`
@@ -133,7 +132,7 @@ express 3.0 会去掉 `app.error`
 
 # 注意
 
-* worker 进程中的 remain 变量，是判断一个 worker 是否空闲的依据; 因此我强烈建议在你的应用程序 worker 进程中，采用更优雅的幂等操作对其计数，并且通过 worker.release(remain) 的方法回写;
+* worker 进程中的 `remain` 变量，是判断一个 worker 是否空闲的依据; 因此我强烈建议在你的应用程序 worker 进程中，采用更优雅的幂等操作对其计数，并且通过 `worker.release(remain)` 的方法回写;
 
 # Authors
 
