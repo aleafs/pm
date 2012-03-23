@@ -68,7 +68,7 @@ describe('lib/cluster', function() {
   });
 
   after(function() {
-    process.kill(process.pid, 'SIGTERM');
+    master.close();
   });
 
 });
