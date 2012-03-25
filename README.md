@@ -50,6 +50,7 @@ worker.ready(function (socket) {
 执行：`node dispatch.js`即可。
 
 # 示例
+
 demo目录下提供了一个典型的示例，你可以通过下列命令启动这个服务：
 
 ```bash
@@ -61,6 +62,7 @@ $ node demo/main.js &
 * main.js 是master进程，通过 register 方法注册 worker进程，并通过 dispatch 进行工作; 除此之外，master 进程不需要做任何工作，你就可以实现一个高稳定性的生产服务;
 * worker/http.js 提供了监听在 33749 端口上的 HTTP 服务; 通过NodeJS 原生的http模块实现，demo中仅提供了 hello world的示例;
 * worker/echo.js 提供监听在 8080 端口上的Socket应答服务.
+* worker/multi_port_http.js 提供了监听在 33750 和 33751 端口上的 HTTP 服务; 通过NodeJS 原生的http模块实现，demo中仅提供了 hello world的示例;
 
 ## 结合 [connect](https://github.com/senchalabs/connect) 使用
 
@@ -127,7 +129,7 @@ worker.ready(function(socket) {
 });
 ```
 
-# 结合[express](https://github.com/visionmedia/express)
+## 结合[express](https://github.com/visionmedia/express)
 
 感谢[@yuest](https://github.com/yuest) 提供[Express使用说明](https://github.com/aleafs/node-cluster/issues/6#issuecomment-4516724).
 
@@ -174,12 +176,13 @@ Below is the output from `git-summary`.
 
 ```
  project: node-cluster
- commits: 83
- files  : 16
+ commits: 91
+ files  : 18
  authors: 
-    62  aleafs                  74.7%
-     8  fengmk2                 9.6%
-     6  Jackson Tian            7.2%
-     6  aleafs zhang            7.2%
-     1  pengchun                1.2%
+    67  aleafs                  73.6%
+    10  fengmk2                 11.0%
+     6  Jackson Tian            6.6%
+     6  aleafs zhang            6.6%
+     1  Will Wen Gunn           1.1%
+     1  pengchun                1.1%
 ```
