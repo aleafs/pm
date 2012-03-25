@@ -9,10 +9,10 @@
  */
 
 if (process.env.JSCOV) {
-    var jscover = require('jscoverage');
-    require = jscover.require(module);
-    require(__dirname + '/../lib/cluster.js', true);
-    process.on('exit', jscover.coverage);
+  var jscover = require('jscoverage');
+  require = jscover.require(module);
+  require(__dirname + '/../lib/cluster.js', true);
+  process.on('exit', jscover.coverage);
 }
 
 var should  = require('should');
@@ -23,12 +23,13 @@ describe('lib/cluster', function() {
   before(function(done) {
     master.register(37211, __dirname + '/support/app.js');
     master.register(37212, __dirname + '/support/app.js', {
-		'cnum'	: 1,
-	});
+      cnum: 1,
+    });
     master.register(37213, __dirname + '/support/app.js', {
-		'cnum'	: 3,
-		'user'	: 'nobody',
-	});
+      cnum: 3,
+      user: 'nobody',
+    });
+    master.register([ 37214, 37215 ], __dirname + '/support/multi_port.js', { cnum: 2 });
     master.dispatch();
     setTimeout(done, 1000);
   });
@@ -39,9 +40,10 @@ describe('lib/cluster', function() {
       pids.length.should.equal(require('os').cpus().length);
     });
 
-    it('fork 1 and 3 children', function() {
+    it('fork 1, 3, 2 children', function() {
       Object.keys(master.heartmsg[37212]).length.should.equal(1);
       Object.keys(master.heartmsg[37213]).length.should.equal(3);
+      Object.keys(master.heartmsg[37214]).length.should.equal(2);
     });
   });
 
@@ -65,6 +67,25 @@ describe('lib/cluster', function() {
         done();
       });
     });
+
+    it('GET port 37214', function(done) {
+      master.request(37214).get('/').end(function(res) {
+        res.should.status(200);
+        res.headers.should.have.property('content-type', 'text/plain;charset=utf-8');
+        res.body.toString().should.equal('hello world, handle port 37214');
+        done();
+      });
+    });
+
+    it('GET port 37215', function(done) {
+      master.request(37215).get('/37215').end(function(res) {
+        res.should.status(200);
+        res.headers.should.have.property('content-type', 'text/plain;charset=utf-8');
+        res.body.toString().should.equal('hello world, handle port 37215');
+        done();
+      });
+    });
+
   });
 
   after(function() {

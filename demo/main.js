@@ -1,10 +1,10 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 
-var Master  = require('../lib/cluster.js').Master;
+var Master = require('../lib/cluster.js').Master;
 
-var app  = new Master({
-    'max_fatal_restart'     : 2,
-    'restart_time_window'   : 60,
+var app = new Master({
+  'max_fatal_restart'     : 2,
+  'restart_time_window'   : 60,
 });
 
 app.register(
@@ -47,6 +47,6 @@ app.register(
   }
 
 );
-
-app.register(33749, __dirname + '/worker/http.js', {'cnum' : 1});
+app.register(33749, __dirname + '/worker/http.js', { 'cnum': 1 });
+app.register([ 33750, 33751 ], __dirname + '/worker/multi_port_http.js', { 'cnum': 2 }); // listen 2 different port
 app.dispatch();
