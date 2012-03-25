@@ -97,6 +97,36 @@ admin.ready(function(socket) {
 $ node demo/connect/dispatch.js
 ```
 
+## 结合 [webjs](https://github.com/iwillwen/webjs) 开发
+
+webjs原生支持node-cluster哦，亲~
+                                ————小问  
+修改步骤十分简单，在webjs生成的代码中：
+
+- server.js
+
+```javascript
+var cluster = require('node-cluster');
+
+var master = new cluster.Master();
+master.register(80, __dirname + 'controllers/index.js').dispatch();
+```
+
+- /controllers/index.js
+
+  增加以下代码
+
+```javascript
+var cluster = require('node-cluster');
+
+web.run(65536);  //把原本的80改成其他端口，以免冲突
+
+var worker = cluster.Worker();
+worker.ready(function(socket) {
+    web.server.emit('connection', socket);
+});
+```
+
 # 结合[express](https://github.com/visionmedia/express)
 
 感谢[@yuest](https://github.com/yuest) 提供[Express使用说明](https://github.com/aleafs/node-cluster/issues/6#issuecomment-4516724).
