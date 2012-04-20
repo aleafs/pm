@@ -37,7 +37,7 @@ master.on('restartgiveup', function(port, msg) {
 app.js：
 
 ```javascript
-var server  = http.createServer(function (req, res) {
+var server  = require('http').createServer(function (req, res) {
   // TODO
 });
 
