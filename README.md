@@ -37,6 +37,7 @@ master.on('restartgiveup', function(port, msg) {
 app.js：
 
 ```javascript
+var cluster = require('node-cluster');
 var server  = require('http').createServer(function (req, res) {
   // TODO
 });
