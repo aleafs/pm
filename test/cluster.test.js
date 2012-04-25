@@ -19,7 +19,9 @@ var should  = require('should');
 var cluster = require('../');
 
 describe('lib/cluster', function() {
-  var master = cluster.Master();
+  var master = cluster.Master({
+    'pidfile'   : __dirname + '/my.pid',
+  });
   before(function(done) {
     master.register(37211, __dirname + '/support/app.js');
     master.register(37212, __dirname + '/support/app.js', {
