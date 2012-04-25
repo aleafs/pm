@@ -24,6 +24,7 @@ describe('lib/cluster', function() {
     master.register(37211, __dirname + '/support/app.js');
     master.register(37212, __dirname + '/support/app.js', {
       cnum: 1,
+      args: ['a', '-b 1', '--debug']
     });
     master.register(37213, __dirname + '/support/app.js', {
       cnum: 3,
@@ -85,6 +86,18 @@ describe('lib/cluster', function() {
         done();
       });
     });
+
+    /* {{{ should_register_worker_with_args_works_fine() */
+    it('should_register_worker_with_args_works_fine', function(done) {
+      master.request(37212).get('/print_args').end(function(res) {
+        var arg = JSON.parse(res.body.toString().split("\r\n\r\n").pop().trim());
+        arg.pop().should.eql('--debug');
+        arg.pop().should.eql('-b 1');
+        arg.pop().should.eql('a');
+        done();
+      });
+    });
+    /* }}} */
 
   });
 
