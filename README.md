@@ -177,13 +177,14 @@ Below is the output from `git-summary`.
 
 ```
  project: node-cluster
- commits: 91
+ commits: 98
  files  : 18
  authors: 
-    67  aleafs                  73.6%
-    10  fengmk2                 11.0%
-     6  Jackson Tian            6.6%
-     6  aleafs zhang            6.6%
-     1  Will Wen Gunn           1.1%
-     1  pengchun                1.1%
+    73  aleafs                  74.5%
+    11  fengmk2                 11.2%
+     6  Jackson Tian            6.1%
+     6  aleafs zhang            6.1%
+     1  Will Wen Gunn           1.0%
+     1  pengchun                1.0%
+
 ```
