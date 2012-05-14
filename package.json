@@ -1,13 +1,22 @@
 {
   "name": "node-cluster",
-  "version": "0.1.2",
+  "version": "0.1.15",
   "author": "Aleafs Zhang (zhangxc83@gmail.com)",
   "homepage": "https://github.com/aleafs/node-cluster",
   "description": "A graceful node library to contribute a permanent \"master-worker\" server.",
+  "keywords": ["cluster", "child-process", "master-worker"],
   "dependencies": {},
   "engines": {
-    "node": "~0.6.9"
+    "node": ">=0.6.6"
   },
   "main": "lib/cluster.js",
-  "scripts": {}
+  "devDependencies": {
+    "connect": "=1.8.5",
+    "should": ">=0.4.2",
+    "mocha": ">=0.9.0",
+    "jscoverage":">=0.1.1"
+  },
+  "scripts": {
+    "test": "make test"
+  }
 }
