@@ -13,11 +13,11 @@ var connect = require('connect');
 
 var app = connect(connect.static(__dirname));
 
-app.use(function(req, res) {
+app.use(function (req, res) {
   res.end(req.url + ', pid ' + process.pid);
 });
 
 var admin = cluster.Worker();
-admin.ready(function(socket) {
+admin.ready(function (socket) {
   app.emit('connection', socket);
 });

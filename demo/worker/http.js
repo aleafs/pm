@@ -25,7 +25,7 @@ var server  = Http.createServer(function (req, res) {
   admin.release(REQUEST_QUEQUE.length);
 });
 
-admin.ready(function(socket) {
+admin.ready(function (socket) {
   server.emit('connection', socket);
 });
 
