@@ -1,23 +1,23 @@
 {
   "name": "node-cluster",
-  "version": "2.0.0-alpha",
-  "author": "Aleafs Zhang (zhangxc83@gmail.com)",
-  "contributors": [
-  ],
-  "homepage": "git@github.com:aleafs/node-cluster.git",
-  "description": "A new develop framework for Node.js",
-  "keywords": [ "shark", "Node.js", "framework" ],
-  "dependencies": {
-  },
-  "engines": {
-    "node": ">=0.6.9"
-  },
-  "devDependencies": {
-    "should"        : ">=0.4.2",
-    "mocha"         : ">=0.9.0",
-    "jscoverage"    : "https://github.com/visionmedia/node-jscoverage.git"
-  },
-  "scripts": {
-    "test": "make test"
-  }
+    "version": "2.0.0-alpha",
+    "author": "Aleafs Zhang (zhangxc83@gmail.com)",
+    "contributors": [
+      ],
+    "homepage": "git@github.com:aleafs/node-cluster.git",
+    "description": "A graceful node library to contribute a permanent \"master-worker\" server.",
+    "keywords": [ "cluster", "child-process", "master-worker" ],
+    "dependencies": {},
+    "engines": {
+      "node": ">=0.6.9"
+    },
+    "devDependencies": {
+      "should"        : ">=0.4.2",
+      "mocha"         : ">=0.9.0",
+      "visionmedia-jscoverage" : ">=1.0.0"
+    },
+    "main"  : "./index.js",
+    "scripts": {
+      "test": "make test"
+    }
 }
