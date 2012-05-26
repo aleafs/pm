@@ -1,3 +1,0 @@
---require node_modules/should
---require test/support/http.js
---growl
