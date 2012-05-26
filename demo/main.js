@@ -3,8 +3,8 @@
 var Master = require('../lib/cluster.js').Master;
 
 var app = new Master({
-  'max_fatal_restart'     : 2,
-  'restart_time_window'   : 60,
+  'max_fatal_restart'   : 2,
+  'restart_time_window' : 60
 });
 
 app.register(
@@ -43,7 +43,7 @@ app.register(
     /**
      * @worker进程的工作用户，默认null，表示以master的启动用户进行运行 (仅root下有效)
      */
-    'user'  : 'nobody',
+    'user'  : 'nobody'
   }
 
 );
