@@ -8,7 +8,7 @@ test:
 cov: clean
 	@npm install
 	@mv lib lib.bak && $(JSCOVERAGE) lib.bak lib 
-	-./node_modules/mocha/bin/mocha --reporter html-cov --timeout 5000 test/*.js > ./coverage.html
+	-./node_modules/mocha/bin/mocha --reporter html-cov --timeout 5000 --ignore-leaks test/*.js > ./coverage.html
 	-rm -rf lib && mv lib.bak lib
 
 clean:
