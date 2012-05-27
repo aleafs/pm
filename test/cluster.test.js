@@ -1,6 +1,7 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 
 var fs      = require('fs');
+var net     = require('net');
 var should  = require('should');
 var Cluster = require(__dirname + '/../');
 
@@ -64,9 +65,18 @@ describe('node-cluster v2.0.0-alpha', function() {
     var _me = Cluster.Master({
       'pidfile' : pidfile,
     });
-    _me.register('http1', __dirname + '/fixtures/http.js');
+    _me.register('http1', __dirname + '/fixtures/http.js', {
+      'children'    : 1,
+      'listen'      : [11233],
+    });
     _me.dispatch();
-    done();
+
+    var client  = net.createConnection(11233, function() {
+      console.log('aa');
+      client.write('');
+      _me.shutdown('http1');
+      done();
+    });
   });
   /* }}} */
 
