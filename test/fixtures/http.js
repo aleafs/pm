@@ -9,4 +9,4 @@ var server  = require('http').createServer(function (req, res) {
 var worker  = require(__dirname + '/../../').Worker(function(socket) {
   server.emit('connection', socket);
 });
-worker.run();
+worker.ready();

@@ -7,3 +7,4 @@ exports.Master  = function(options) {
 exports.Worker  = function() {
   return require(__dirname + '/lib/worker.js').create();
 };
+
