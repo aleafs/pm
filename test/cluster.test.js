@@ -4,12 +4,46 @@ var fs      = require('fs');
 var should  = require('should');
 var Cluster = require(__dirname + '/../');
 
-describe('node-cluster v2.0.0-alpha', function () {
+describe('common functions', function() {
+
+  /* {{{ should_listen_at_port_works_fine() */
+  xit('should_listen_at_port_works_fine', function(done) {
+
+    var count   = 2;
+
+    /* {{{ connect() */
+    var connect = function(handle) {
+      var res   = new require('net').Socket({
+        'handle'    : handle,
+      });
+      res.readable  = true;
+      res.writeable = true;
+      res.resume();
+      res.write('hello ->' + count);
+    };
+    /* }}} */
+
+    require(__dirname + '/../lib/common.js').listen(11234, connect);
+    require(__dirname + '/../lib/common.js').listen(__dirname + '/a.socket', connect);
+    var _me = require('net').createConnection(__dirname + '/a.socket', function() {
+      console.log('aa');
+    });
+    _me.on('data', function(data) {
+      console.log(data);
+      _me.end();
+      done();
+    });
+  });
+  /* }}} */
+
+});
+
+describe('node-cluster v2.0.0-alpha', function() {
 
   var pidfile   = __dirname + '/test.pid';
 
   /* {{{ should_master_create_pidfile_works_fine() */
-  it('should_master_create_pidfile_works_fine', function (done) {
+  it('should_master_create_pidfile_works_fine', function(done) {
 
     var _me = Cluster.Master({
       'pidfile' : pidfile,
