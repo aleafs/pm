@@ -3,10 +3,8 @@
 var server  = require('http').createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
   res.end('hello world');
-  worker.free();
 });
 
-var worker  = require(__dirname + '/../../').Worker(function(socket) {
+require(__dirname + '/../../').Worker().ready(function(socket) {
   server.emit('connection', socket);
 });
-worker.ready();
