@@ -70,7 +70,8 @@ describe('node-cluster v2.0.0-alpha', function() {
       'listen'      : [11233],
     });
     _me.dispatch();
-
+    done();
+    return;
     var client  = net.createConnection(11233, function() {
       console.log('aa');
       client.write('');
