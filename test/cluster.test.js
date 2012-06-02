@@ -49,7 +49,6 @@ describe('node-cluster v2.0.0-alpha', function() {
     var _me = Cluster.Master({
       'pidfile' : pidfile,
     });
-    _me.dispatch();
     setTimeout(function() {
       fs.readFile(pidfile, 'utf-8', function(error, data) {
         should.ok(!error);
@@ -69,7 +68,6 @@ describe('node-cluster v2.0.0-alpha', function() {
       'children'    : 1,
       'listen'      : [11233],
     });
-    _me.dispatch();
     done();
     return;
     var client  = net.createConnection(11233, function() {
