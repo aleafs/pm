@@ -39,7 +39,10 @@ var ProcessIds  = function(cmd, callback) {
   require('child_process').exec(command, function(error, stdout) {
     var ids = [];
     stdout.trim().split("\n").forEach(function(pid) {
-      ids.push(pid);
+      pid   = parseInt(pid, 10);
+      if (pid > 0) {
+        ids.push(pid);
+      }
     });
     callback(error, ids);
   });
@@ -119,20 +122,13 @@ describe('node-cluster v2.0.0-alpha', function() {
 
   /* {{{ should_echo_service_with_master_works_fine() */
   it('should_echo_service_with_master_works_fine', function(done) {
+    var num = 0;
     var _w1 = master.register('echo', __dirname + '/fixtures/echo.js', {
       'children'    : 1,
         'listen' : [11233, __dirname + '/echo.socket'],
     });
 
-    var num = 3;
-    ProcessIds('/fixtures/echo.js', function(error, data) {
-      data.should.have.property('length', 1);
-      if ((--num) === 0) {
-        _w1.stop();
-        done();
-      }
-    });
-
+    ++num;
     var _c1 = require('net').createConnection(11233, '127.0.0.1', function() {
       _c1.on('data', function(data) {
         data.toString().should.eql('<- hello');
@@ -145,6 +141,7 @@ describe('node-cluster v2.0.0-alpha', function() {
       _c1.write('hello');
     });
 
+    ++num;
     var _c2 = require('net').createConnection(__dirname + '/echo.socket', function() {
       _c2.on('data', function(data) {
         data.toString().should.eql('<- world');
@@ -191,5 +188,38 @@ describe('node-cluster v2.0.0-alpha', function() {
   });
   /* }}} */
 
+  /* {{{ should_exit_and_restart_works_fine() */
+  xit('should_exit_and_restart_works_fine', function(done) {
+    ProcessIds('/fixtures/echo.js', function(error, ids) {
+      should.ok(!error);
+      ids.length.should.eql(1);
+
+      var pid1  = ids.pop();
+      process.kill(pid1, 'SIGKILL');
+      setTimeout(function() {
+        ProcessIds('/fixtures/echo.js', function(error, ids) {
+          ids.length.should.eql(1);
+          ids.pop().should.not.eql(pid1);
+          done();
+        });
+      }, 100);
+    });
+  });
+  /* }}} */
+
+  xit('should_will_not_restart_when_stoped', function(done) {
+    ProcessIds('/fixtures/echo.js', function(error, ids) {
+      ids.length.should.eql(1);
+      master.shutdown('echo');
+      process.kill(ids.pop());
+      setTimeout(function() {
+        ProcessIds('/fixtures/echo.js', function(error, ids) {
+          should.ok(!error);
+          ids.should.have.property('length', 0);
+          done();
+        });
+      }, 100);
+    });
+  });
 });
 
