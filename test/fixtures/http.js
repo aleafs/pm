@@ -45,10 +45,10 @@ var server  = require('http').createServer(function (req, res) {
 
   req.on('end', function() {
     res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
-    res.end({
+    res.end(JSON.stringify({
       'url' : req.url,
-      'data': chunk.join(),
-    });
+      'data': chunk.join().toString(),
+    }));
   });
 });
 

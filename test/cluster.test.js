@@ -5,6 +5,7 @@ var net     = require('net');
 var should  = require('should');
 var Cluster = require(__dirname + '/../');
 
+/* {{{ private function HttpRequest() */
 var HttpRequest = function(port, url, post, callback) {
   var options = {
     'host'  : '127.0.0.1',
@@ -28,6 +29,7 @@ var HttpRequest = function(port, url, post, callback) {
   });
   _client.end(post || '');
 };
+/* }}} */
 
 describe('common functions', function() {
 
@@ -135,15 +137,19 @@ describe('node-cluster v2.0.0-alpha', function() {
   /* }}} */
 
   /* {{{ should_with_1_http_server_works_fine() */
-  xit('should_with_1_http_server_works_fine', function(done) {
+  it('should_with_1_http_server_works_fine', function(done) {
 
-    var worker1 = master.register('http1', __dirname + '/fixtures/http.js', {
+    var _w2 = master.register('http1', __dirname + '/fixtures/http.js', {
       'children'    : 1,
         'listen'      : [11233],
     });
 
     HttpRequest(11233, '/sdew/dfewf?dfewf', 'aabb=cdef', function(data) {
-      console.log(data);
+      data.toString().should.eql(JSON.stringify({
+        'url'   : '/sdew/dfewf?dfewf',
+        'data'  : 'aabb=cdef',
+      }));
+      _w2.stop();
       done();
     });
   });
