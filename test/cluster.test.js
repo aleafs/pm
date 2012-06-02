@@ -8,31 +8,49 @@ var Cluster = require(__dirname + '/../');
 describe('common functions', function() {
 
   /* {{{ should_listen_at_port_works_fine() */
-  xit('should_listen_at_port_works_fine', function(done) {
+  it('should_listen_at_port_works_fine', function(done) {
 
     var count   = 2;
 
     /* {{{ connect() */
-    var connect = function(handle) {
+    var connect = function(handle, message) {
       var res   = new require('net').Socket({
         'handle'    : handle,
       });
       res.readable  = true;
       res.writeable = true;
       res.resume();
-      res.write('hello ->' + count);
+      res.write(message);
     };
     /* }}} */
 
-    require(__dirname + '/../lib/common.js').listen(11234, connect);
-    require(__dirname + '/../lib/common.js').listen(__dirname + '/a.socket', connect);
-    var _me = require('net').createConnection(__dirname + '/a.socket', function() {
-      console.log('aa');
+    var _c1 = require(__dirname + '/../lib/common.js').listen(11234, function(handle) {
+      connect(handle, 'port');
     });
+    var _c2 = require(__dirname + '/../lib/common.js').listen(__dirname + '/a.socket', function(handle) {
+      connect(handle, 'socket');
+    });
+
+    var _me = require('net').createConnection(__dirname + '/a.socket');
     _me.on('data', function(data) {
-      console.log(data);
       _me.end();
-      done();
+      data.toString().should.eql('socket');
+      if ((--count) === 0) {
+        _c1.close();
+        _c2.close();
+        done();
+      }
+    });
+
+    var _me = require('net').createConnection(11234);
+    _me.on('data', function(data) {
+      _me.end();
+      data.toString().should.eql('port');
+      if ((--count) === 0) {
+        _c1.close();
+        _c2.close();
+        done();
+      }
     });
   });
   /* }}} */
@@ -60,7 +78,7 @@ describe('node-cluster v2.0.0-alpha', function() {
   /* }}} */
 
   /* {{{ should_with_1_http_server_works_fine() */
-  it('should_with_1_http_server_works_fine', function(done) {
+  xit('should_with_1_http_server_works_fine', function(done) {
     var _me = Cluster.Master({
       'pidfile' : pidfile,
     });
