@@ -5,10 +5,34 @@ var net     = require('net');
 var should  = require('should');
 var Cluster = require(__dirname + '/../');
 
+var HttpRequest = function(port, url, post, callback) {
+  var options = {
+    'host'  : '127.0.0.1',
+    'port'  : port,
+    'path'  : url,
+    'method'    : post ? 'POST' : 'GET',
+    'headers'   : {},
+  };
+
+  if (post) {
+    options.headers['Content-Length'] = post.length;
+  }
+  var _client = require('http').request(options, function(res) {
+    var chunk = '';     // ignore multibytes charactors
+    res.on('data', function(data) {
+      chunk += data;
+    });
+    res.on('end', function() {
+      callback(chunk);
+    });
+  });
+  _client.end(post || '');
+};
+
 describe('common functions', function() {
 
-  /* {{{ should_listen_at_port_works_fine() */
-  it('should_listen_at_port_works_fine', function(done) {
+  /* {{{ should_listen_at_port_or_socket_works_fine() */
+  it('should_listen_at_port_or_socket_works_fine', function(done) {
 
     var count   = 2;
 
@@ -60,13 +84,12 @@ describe('common functions', function() {
 describe('node-cluster v2.0.0-alpha', function() {
 
   var pidfile   = __dirname + '/test.pid';
+  var master    = Cluster.Master({
+    'pidfile'   : pidfile,
+  });
 
   /* {{{ should_master_create_pidfile_works_fine() */
   it('should_master_create_pidfile_works_fine', function(done) {
-
-    var _me = Cluster.Master({
-      'pidfile' : pidfile,
-    });
     setTimeout(function() {
       fs.readFile(pidfile, 'utf-8', function(error, data) {
         should.ok(!error);
@@ -77,21 +100,50 @@ describe('node-cluster v2.0.0-alpha', function() {
   });
   /* }}} */
 
+  /* {{{ should_echo_service_with_master_works_fine() */
+  it('should_echo_service_with_master_works_fine', function(done) {
+    var _w1 = master.register('echo', __dirname + '/fixtures/echo.js', {
+      'children'    : 1,
+        'listen' : [11233, __dirname + '/echo.socket'],
+    });
+
+    var num = 2;
+    var _c1 = require('net').createConnection(11233, '127.0.0.1', function() {
+      _c1.on('data', function(data) {
+        data.toString().should.eql('<- hello');
+        _c1.end();
+        if ((--num) === 0) {
+          _w1.stop();
+          done();
+        }
+      });
+      _c1.write('hello');
+    });
+
+    var _c2 = require('net').createConnection(__dirname + '/echo.socket', function() {
+      _c2.on('data', function(data) {
+        data.toString().should.eql('<- world');
+        _c2.end();
+        if ((--num) === 0) {
+          _w1.stop();
+          done();
+        }
+      });
+      _c2.write('world');
+    });
+  });
+  /* }}} */
+
   /* {{{ should_with_1_http_server_works_fine() */
   xit('should_with_1_http_server_works_fine', function(done) {
-    var _me = Cluster.Master({
-      'pidfile' : pidfile,
-    });
-    _me.register('http1', __dirname + '/fixtures/http.js', {
+
+    var worker1 = master.register('http1', __dirname + '/fixtures/http.js', {
       'children'    : 1,
-      'listen'      : [11233],
+        'listen'      : [11233],
     });
-    done();
-    return;
-    var client  = net.createConnection(11233, function() {
-      console.log('aa');
-      client.write('');
-      _me.shutdown('http1');
+
+    HttpRequest(11233, '/sdew/dfewf?dfewf', 'aabb=cdef', function(data) {
+      console.log(data);
       done();
     });
   });
