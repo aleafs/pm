@@ -1,0 +1,1 @@
+1. process.on('exit') does not work

@@ -1,2 +1,4 @@
 node_modules
 coverage.html
+*.pid
+*.swp

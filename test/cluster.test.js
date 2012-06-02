@@ -31,6 +31,22 @@ var HttpRequest = function(port, url, post, callback) {
 };
 /* }}} */
 
+/* {{{ private function ProcessIds() */
+var ProcessIds  = function(cmd, callback) {
+  var command   = require('util').format('ps -fxwwww | grep "%s" | grep -v grep | awk \'{print $2}\'', cmd);
+  require('child_process').exec(command, function(error, stdout) {
+    var ids = [];
+    stdout.trim().split("\n").forEach(function(pid) {
+      pid = parseInt(pid, 10);
+      if (pid > process.pid) {      /**<    make sure to get the children   */
+        ids.push(pid);
+      }
+    });
+    callback(error, ids);
+  });
+};
+/* }}} */
+
 describe('common functions', function() {
 
   /* {{{ should_listen_at_port_or_socket_works_fine() */
@@ -109,7 +125,15 @@ describe('node-cluster v2.0.0-alpha', function() {
         'listen' : [11233, __dirname + '/echo.socket'],
     });
 
-    var num = 2;
+    var num = 3;
+    ProcessIds('/fixtures/echo.js', function(error, data) {
+      data.should.have.property('length', 1);
+      if ((--num) === 0) {
+        _w1.stop();
+        done();
+      }
+    });
+
     var _c1 = require('net').createConnection(11233, '127.0.0.1', function() {
       _c1.on('data', function(data) {
         data.toString().should.eql('<- hello');
@@ -140,20 +164,46 @@ describe('node-cluster v2.0.0-alpha', function() {
   it('should_with_1_http_server_works_fine', function(done) {
 
     var _w2 = master.register('http1', __dirname + '/fixtures/http.js', {
-      'children'    : 1,
-        'listen'      : [11233],
+      'listen'  : [11233],
     });
 
+    var num = 0;
+
+    ++num;
+    ProcessIds('/fixtures/echo.js', function(error, data) {
+      data.should.have.property('length', 1);
+      if ((--num) === 0) {
+        _w1.stop();
+        done();
+      }
+    });
+
+    ++num;
+    ProcessIds('/fixtures/http.js', function(error, data) {
+      data.should.have.property('length', require('os').cpus().length);
+      if ((--num) === 0) {
+        _w1.stop();
+        done();
+      }
+    });
+
+    ++num;
     HttpRequest(11233, '/sdew/dfewf?dfewf', 'aabb=cdef', function(data) {
       data.toString().should.eql(JSON.stringify({
         'url'   : '/sdew/dfewf?dfewf',
         'data'  : 'aabb=cdef',
       }));
       _w2.stop();
-      done();
+      if ((--num) === 0) {
+        done();
+      }
     });
   });
   /* }}} */
+
+  after(function() {
+    master.shutdown();
+  });
 
 });
 
