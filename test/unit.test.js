@@ -170,11 +170,7 @@ describe('node-cluster v2.0.0-alpha', function() {
 
     ++num;
     ProcessIds('/fixtures/http.js', function(error, data) {
-      /**
-       * @mocha : 4
-       * @make  : 5
-       */
-      //data.should.have.property('length', require('os').cpus().length);
+      data.should.have.property('length', require('os').cpus().length);
       if ((--num) === 0) {
         _w2.stop();
         done();
