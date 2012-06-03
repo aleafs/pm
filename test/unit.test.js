@@ -224,5 +224,26 @@ describe('node-cluster v2.0.0-alpha', function() {
   });
   /* }}} */
 
+  /* {{{ should_max_fatal_restart_works_fine() */
+  xit('should_max_fatal_restart_works_fine', function(done) {
+    var num = 5;
+
+    for (var i = 0; i < num; i++) {
+      var _c1 = require('net').createConnection(11233, '127.0.0.1', function() {
+        _c1.on('error', function(error) {
+          console.log(num);
+        });
+        _c1.on('data', function(data) {
+          if ((--num) === 0) {
+            _w1.stop();
+            done();
+          }
+        });
+        _c1.write('fatal');
+      });
+    }
+  });
+  /* }}} */
+
 });
 

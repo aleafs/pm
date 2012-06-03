@@ -13,6 +13,10 @@ var server  = require('http').createServer(function (req, res) {
       worker.reload('daemon');
       break;
 
+    case 'fatal':
+      worker.sendto('daemon', 'fatal');
+      break;
+
     default:
       break;
   }

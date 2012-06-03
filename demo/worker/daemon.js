@@ -2,7 +2,15 @@
 
 var worker  = require(__dirname + '/../../').Worker().ready();
 worker.onmessage(function(msg) {
-  console.log('Got message : ' + msg);
+  switch (msg.toString()) {
+    case 'fatal':
+      process.exit(127);
+      break;
+
+    default:
+      console.log('Got message : ' + msg);
+      break;
+  }
 });
 
 setInterval(function() {

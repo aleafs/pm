@@ -7,6 +7,7 @@ require(__dirname + '/../../').Worker().ready(function(socket) {
       socket.write('Good Bye!\n');
       socket.end();
     } else if ('fatal' === data.slice(0, 5)) {
+      socket.write('Got fatal');
       process.exit(127);
     } else if ('sleep' === data.slice(0, 5)) {
       setTimeout(function () {
