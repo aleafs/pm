@@ -123,6 +123,31 @@ describe('node-cluster v2.0.0-alpha', function() {
   /* {{{ should_echo_service_with_master_works_fine() */
   it('should_echo_service_with_master_works_fine', function(done) {
     var num = 0;
+
+    var _shutdown   = function() {
+      ProcessIds('/fixtures/echo.js', function(error, ids) {
+        should.ok(!error);
+        ids.should.have.property('length', 1);
+
+        var pid = ids.pop();
+        _w1.reload();
+
+        ProcessIds('/fixtures/echo.js', function(error, ids) {
+          should.ok(!error);
+
+          var _list = [];
+          ids.forEach(function(id) {
+            if (id !== pid) {
+              _list.push(id);
+            }
+          });
+          _list.should.have.property('length', 1);
+          _w1.stop();
+          done();
+        });
+      });
+    };
+
     var _w1 = master.register('echo', __dirname + '/fixtures/echo.js', {
       'children'    : 1,
         'listen' : [11233, __dirname + '/echo.socket'],
@@ -134,8 +159,7 @@ describe('node-cluster v2.0.0-alpha', function() {
         data.toString().should.eql('<- hello');
         _c1.end();
         if ((--num) === 0) {
-          _w1.stop();
-          done();
+          _shutdown();
         }
       });
       _c1.write('hello');
@@ -147,8 +171,7 @@ describe('node-cluster v2.0.0-alpha', function() {
         data.toString().should.eql('<- world');
         _c2.end();
         if ((--num) === 0) {
-          _w1.stop();
-          done();
+          _shutdown();
         }
       });
       _c2.write('world');
