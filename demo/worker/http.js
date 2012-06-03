@@ -10,7 +10,7 @@ var server  = require('http').createServer(function (req, res) {
       break;
 
     case 'reload':
-      // RELOAD ...
+      worker.reload('daemon');
       break;
 
     default:

@@ -1,8 +1,8 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 
 var worker  = require(__dirname + '/../../').Worker().ready();
-worker.onmessage(function(msg, from) {
-  console.log('Got message from ' + from + ': ' + msg);
+worker.onmessage(function(msg) {
+  console.log('Got message : ' + msg);
 });
 
 setInterval(function() {
