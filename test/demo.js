@@ -5,6 +5,6 @@ var Master  = require(__dirname + '/../').Master({
 });
 
 var server  = Master.register('http', __dirname + '/fixtures/http.js', {
-  'children'    : 1,
+  'children'    : 4,
     'listen'    : 7751,
 });

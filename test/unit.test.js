@@ -34,13 +34,13 @@ var HttpRequest = function(port, url, post, callback) {
 /* {{{ private function ProcessIds() */
 var ProcessIds  = function(cmd, callback) {
   var command   = require('util').format(
-      'ps -fxwwww | grep "%s" | grep -v grep | awk \'{if($3==%d) {print $2}}\'', cmd, process.pid
+      'ps uxwwww | grep "%s" | grep -v grep | awk \'{print $2}\'', cmd
       );
   require('child_process').exec(command, function(error, stdout) {
     var ids = [];
     stdout.trim().split("\n").forEach(function(pid) {
       pid   = parseInt(pid, 10);
-      if (pid > 0) {
+      if (pid > process.pid) {
         ids.push(pid);
       }
     });
