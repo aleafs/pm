@@ -207,11 +207,12 @@ describe('node-cluster v2.0.0-alpha', function() {
   });
   /* }}} */
 
-  xit('should_will_not_restart_when_stoped', function(done) {
+  /* {{{ should_will_not_restart_when_stoped() */
+  it('should_will_not_restart_when_stoped', function(done) {
     ProcessIds('/fixtures/echo.js', function(error, ids) {
       ids.length.should.eql(1);
       master.shutdown('echo');
-      process.kill(ids.pop());
+      process.kill(ids.pop(), 'SIGKILL');
       setTimeout(function() {
         ProcessIds('/fixtures/echo.js', function(error, ids) {
           should.ok(!error);
@@ -221,5 +222,7 @@ describe('node-cluster v2.0.0-alpha', function() {
       }, 100);
     });
   });
+  /* }}} */
+
 });
 
