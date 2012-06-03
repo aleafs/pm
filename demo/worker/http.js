@@ -1,31 +1,57 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
-/*+------------------------------------------------------------------------
- * HTTP 协议的worker 示例
- *
- * @author : pengchun@taobao.com
- *+------------------------------------------------------------------------
+
+/**
+ * @BufferHelper
  */
+/* {{{ */
+var BufferHelper    = function() {
+  var chunk = [];
+  var total = 0;
 
-var Http  = require('http');
-var Worker  = require(__dirname + '/../../lib/cluster.js').Worker;
+  var _me   = {};
+  _me.push  = function(data) {
+    chunk.push(data);
+    total += data.length;
+  };
 
+  _me.join  = function() {
+    if (0 == chunk.length) {
+      return new Buffer(0);
+    }
 
-var REQUEST_QUEQUE = [];
+    if (1 == chunk.length) {
+      return chunk[0];
+    }
 
-var admin  = new Worker();
-var server  = Http.createServer(function (req, res) {
-  admin.transact();
-  REQUEST_QUEQUE.push(REQUEST_QUEQUE.length);
+    var data  = new Buffer(total), pos = 0;
+    chunk.forEach(function(item) {
+      item.copy(data, pos);
+      pos += item.length;
+    });
 
-  // XXX: DO SOMETHIS
-  res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
-  res.end('hello world');
+    return data;
+  };
 
-  REQUEST_QUEQUE.pop();
-  admin.release(REQUEST_QUEQUE.length);
+  return _me;
+};
+/* }}} */
+
+var server  = require('http').createServer(function (req, res) {
+
+  var chunk = BufferHelper();
+  req.on('data', function(data) {
+    chunk.push(data);
+  });
+
+  req.on('end', function() {
+    res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
+    res.end(JSON.stringify({
+      'url' : req.url,
+      'data': chunk.join().toString(),
+    }));
+  });
 });
 
-admin.ready(function (socket) {
+require(__dirname + '/../../lib/cluster.js').Worker().ready(function(socket) {
   server.emit('connection', socket);
 });
-
