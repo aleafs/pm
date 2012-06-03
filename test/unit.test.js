@@ -162,7 +162,7 @@ describe('node-cluster v2.0.0-alpha', function() {
     var num = 0;
 
     var _w2 = master.register('http1', __dirname + '/fixtures/http.js', {
-      'listen'  : [11233],
+      'listen'  : [11234],
     });
 
     ++num;
@@ -175,7 +175,7 @@ describe('node-cluster v2.0.0-alpha', function() {
     });
 
     ++num;
-    HttpRequest(11233, '/sdew/dfewf?dfewf', 'aabb=cdef', function(data) {
+    HttpRequest(11234, '/sdew/dfewf?dfewf', 'aabb=cdef', function(data) {
       data.toString().should.eql(JSON.stringify({
         'url'   : '/sdew/dfewf?dfewf',
         'data'  : 'aabb=cdef',
