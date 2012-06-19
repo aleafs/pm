@@ -130,7 +130,7 @@ describe('node-cluster v2.0.0-alpha', function() {
         ids.should.have.property('length', 1);
 
         var pid = ids.pop();
-        _w1.reload();
+        master.reload('echo');
 
         ProcessIds('/fixtures/echo.js', function(error, ids) {
           should.ok(!error);
@@ -142,15 +142,15 @@ describe('node-cluster v2.0.0-alpha', function() {
             }
           });
           _list.should.have.property('length', 1);
-          _w1.stop();
+          master.shutdown('echo');
           done();
         });
       });
     };
 
-    var _w1 = master.register('echo', __dirname + '/fixtures/echo.js', {
+    master.register('echo', __dirname + '/fixtures/echo.js', {
       'children'    : 1,
-        'listen' : [11233, __dirname + '/echo.socket'],
+      'listen' : [11233, __dirname + '/echo.socket'],
     });
 
     ++num;
@@ -184,7 +184,7 @@ describe('node-cluster v2.0.0-alpha', function() {
 
     var num = 0;
 
-    var _w2 = master.register('http1', __dirname + '/fixtures/http.js', {
+    master.register('http1', __dirname + '/fixtures/http.js', {
       'listen'  : [11234],
     });
 
@@ -192,7 +192,7 @@ describe('node-cluster v2.0.0-alpha', function() {
     ProcessIds('/fixtures/http.js', function(error, data) {
       data.should.have.property('length', require('os').cpus().length);
       if ((--num) === 0) {
-        _w2.stop();
+        master.shutdown('http1');
         done();
       }
     });
@@ -204,7 +204,7 @@ describe('node-cluster v2.0.0-alpha', function() {
         'data'  : 'aabb=cdef',
       }));
       if ((--num) === 0) {
-        _w2.stop();
+        master.shutdown('http1');
         done();
       }
     });
