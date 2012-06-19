@@ -1,5 +1,7 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 
+var Util    = require('util');
+
 var Master  = require(__dirname + '/../').Master({
   'pidfile' : __dirname + '/bench.pid',
 });
@@ -14,14 +16,16 @@ Master.register('daemon', __dirname + '/worker/daemon.js', {
 /**
  * A http service
  */
-var server  = Master.register('http',   __dirname + '/worker/http.js', {
+Master.register('http',   __dirname + '/worker/http.js', {
   'listen'  : [ 33751, __dirname + '/http.socket' ],
+  'trace_gc': true,
 });
 
-/***
-  server.beforeStop(function() {
+Master.on('giveup', function (name, fatals) {
+  //XXX: alert
+  console.log(Util.format('Master giveup to restart %s process after %d times.', name, fatals));
+});
 
-  // tell service center to set me offline
-  //
-  });
-  */
+Master.on('state', function (name, online) {
+});
+

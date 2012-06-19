@@ -142,7 +142,8 @@ describe('node-cluster v2.0.0-alpha', function() {
             }
           });
           _list.should.have.property('length', 1);
-          master.shutdown('echo');
+          master.shutdown(function () {
+          }, 'SIGTERM', 'echo');
           done();
         });
       });
@@ -192,7 +193,7 @@ describe('node-cluster v2.0.0-alpha', function() {
     ProcessIds('/fixtures/http.js', function(error, data) {
       data.should.have.property('length', require('os').cpus().length);
       if ((--num) === 0) {
-        master.shutdown('http1');
+        master.shutdown(undefined, 'SIGTERM', 'http1');
         done();
       }
     });
@@ -204,7 +205,7 @@ describe('node-cluster v2.0.0-alpha', function() {
         'data'  : 'aabb=cdef',
       }));
       if ((--num) === 0) {
-        master.shutdown('http1');
+        master.shutdown(undefined, 'SIGTERM', 'http1');
         done();
       }
     });
@@ -234,7 +235,9 @@ describe('node-cluster v2.0.0-alpha', function() {
   it('should_will_not_restart_when_stoped', function(done) {
     ProcessIds('/fixtures/echo.js', function(error, ids) {
       ids.length.should.eql(1);
-      master.shutdown('echo');
+      master.shutdown(function() {
+      }, 'SIGTERM', 'echo');
+
       process.kill(ids.pop(), 'SIGKILL');
       setTimeout(function() {
         ProcessIds('/fixtures/echo.js', function(error, ids) {
