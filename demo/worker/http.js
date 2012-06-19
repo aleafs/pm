@@ -3,29 +3,41 @@
 var worker  = require(__dirname + '/../../').Worker();
 var server  = require('http').createServer(function (req, res) {
 
-  var url   = req.url.split('?').shift().split('/')[1].toLowerCase();
-  switch (url) {
-    case 'cleancache':
-      worker.sendto('daemon', 'Please clean your cache');
-      break;
+  var chunk = '';
+  req.on('data', function (data) {
+    chunk += data;      /**<    ignore multibyte charactors, Don't follow me */
+  });
 
-    case 'reload':
-      worker.reload('daemon');
-      break;
+  req.on('end', function () {
+    var url   = req.url.split('?').shift().split('/')[1].toLowerCase();
+    switch (url) {
+      case 'cleancache':
+        worker.sendto('daemon', 'Please clean your cache');
+        break;
 
-    case 'fatal':
-      worker.sendto('daemon', 'fatal');
-      break;
+      case 'reload':
+        worker.reload('daemon');
+        break;
 
-    default:
-      break;
-  }
+      case 'fatal':
+        worker.sendto('daemon', 'fatal');
+        break;
 
-  res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
-  res.end(JSON.stringify({
-    'act'   : url,
-    'url'   : req.url,
-  }));
+      default:
+        break;
+    }
+
+    res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
+    res.end(JSON.stringify({
+      'method'  : req.method,
+      'act'     : url,
+      'url'     : req.url,
+      'post'    : chunk,
+    }));
+
+    chunk   = null;
+  });
+
 });
 
 worker.ready(function(socket) {

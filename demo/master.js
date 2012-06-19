@@ -15,7 +15,7 @@ Master.register('daemon', __dirname + '/worker/daemon.js', {
  * A http service
  */
 var server  = Master.register('http',   __dirname + '/worker/http.js', {
-  'listen'  : [ 33751 ]
+  'listen'  : [ 33751, __dirname + '/http.socket' ],
 });
 
 /***
