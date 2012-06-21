@@ -10,15 +10,15 @@ var Master  = require(__dirname + '/../').Master({
  * daemon process, log analysist or something else
  */
 Master.register('daemon', __dirname + '/worker/daemon.js', {
-  'children'    : 1,
+  'trace_gc': true,
 });
 
 /**
  * A http service
  */
 Master.register('http',   __dirname + '/worker/http.js', {
-  'listen'  : [ 33751, __dirname + '/http.socket' ],
-  'trace_gc': true,
+  'listen'  : [ 33749, __dirname + '/http.socket' ],
+  'children'    : 1,
 });
 
 Master.on('giveup', function (name, fatals) {
