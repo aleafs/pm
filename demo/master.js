@@ -26,6 +26,7 @@ Master.on('giveup', function (name, fatals) {
   console.log(Util.format('Master giveup to restart %s process after %d times.', name, fatals));
 });
 
-Master.on('state', function (name, online) {
+Master.on('stat', function (name, current, before) {
+  console.log(Util.format('Process stat change for %s, current: %d, before: %d', name, current, before));
 });
 
