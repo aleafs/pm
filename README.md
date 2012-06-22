@@ -2,23 +2,22 @@
 
 # Contributors #
 
+Thanks goes to the people who have contributed code to this module, see the [GitHub Contributors page](https://github.com/aleafs/node-cluster/graphs/contributors).
 Below is the output from `git-summary`
 
 ```
  project: node-cluster
- commits: 168
+ commits: 186
  files  : 17
  authors: 
-   142	aleafs                  84.5%
-    12	fengmk2                 7.1%
-     6	Jackson Tian            3.6%
-     6	aleafs zhang            3.6%
-     1	Will Wen Gunn           0.6%
-     1	pengchun                0.6%
-
+   160 aleafs                  86.0%
+    12	fengmk2                 6.5%
+     6	Jackson Tian            3.2%
+     6	aleafs zhang            3.2%
+     1	Will Wen Gunn           0.5%
+     1	pengchun                0.5%
+     
 ```
-
-Click [here](https://github.com/aleafs/node-cluster/graphs/contributors) to get the full contributors list.
 
 # License #
 `node-cluster` is published under MIT license.
