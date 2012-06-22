@@ -17,3 +17,9 @@ Below is the output from `git-summary`
      1	pengchun                0.6%
 
 ```
+
+Click [[here](https://github.com/aleafs/node-cluster/graphs/contributors)] to get the full contributors list.
+
+# License #
+`node-cluster` is published under MIT license.
+See license text in [[LICENSE](https://github.com/aleafs/node-cluster/blob/v2.0/LICENSE)] file.
