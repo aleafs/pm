@@ -3,6 +3,7 @@
 # Contributors #
 
 Thanks goes to the people who have contributed code to this module, see the [GitHub Contributors page](https://github.com/aleafs/node-cluster/graphs/contributors).
+
 Below is the output from `git-summary`
 
 ```
