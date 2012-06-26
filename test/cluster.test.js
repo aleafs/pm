@@ -106,6 +106,7 @@ describe('node-cluster v2.0.0-alpha', function() {
   var pidfile   = __dirname + '/test.pid';
   var master    = Cluster.Master({
     'pidfile'   : pidfile,
+      'statusfile'  : __dirname + '/status.log',
   });
 
   /* {{{ should_master_create_pidfile_works_fine() */
