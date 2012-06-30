@@ -68,10 +68,12 @@ describe('common functions', function() {
     };
     /* }}} */
 
-    var _c1 = require(__dirname + '/../lib/common.js').listen(11234, function(handle) {
+    var _c1 = require(__dirname + '/../lib/common.js').listen(11234, function(handle, port) {
+      port.should.eql(11234);
       connect(handle, 'port');
     });
-    var _c2 = require(__dirname + '/../lib/common.js').listen(__dirname + '/a.socket', function(handle) {
+    var _c2 = require(__dirname + '/../lib/common.js').listen(__dirname + '/a.socket', function(handle, port) {
+      port.should.eql(__dirname + '/a.socket');
       connect(handle, 'socket');
     });
 
