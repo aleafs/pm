@@ -70,7 +70,7 @@ describe('common functions', function() {
     };
     /* }}} */
 
-    var _c1 = require(__dirname + '/../lib/common.js').listen(11234, function(handle, port) {
+    var _c1 = require(__dirname + '/../lib/common.js').listen('11234', function(handle, port) {
       port.should.eql(11234);
       connect(handle, 'port');
     });

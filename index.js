@@ -7,10 +7,8 @@ var worker = require(libpath + '/worker.js');
 /**
  * Create a `Master`.
  * @param {Object} options
- *  - {Array|Number|String} listen, listen port or domain sock, e.g.: `80`, `[80, 8080]` or `[80, '/tmp/web.sock']`.
- *  - {Number} [children], worker number, default is `os.cpu` number.
- *  - {Number} [max_request], max request number per child worker. Dafault is `0`, no limit.
- *  - {Number} [max_fatal_restart], max fatal to giveup restart. Dafault is `5`.
+ *  - {String} [pidfile]
+ *  - {String} [statusfile]
  * @return {Master} the master instance.
  * @api public
  */

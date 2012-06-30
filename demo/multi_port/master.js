@@ -18,7 +18,7 @@ var Master  = require('../../').Master({
  * A http service
  */
 Master.register('http', __dirname + '/app.js', {
-  listen: [33749, 33750],
+  listen: [33749, '33750'],
   children: 4
 });
 
