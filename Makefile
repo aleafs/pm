@@ -1,4 +1,4 @@
-TESTS = test/*.test.js
+TESTS = test/*.js
 REPORTER = spec
 TIMEOUT = 2000
 JSCOVERAGE = ./node_modules/visionmedia-jscoverage/jscoverage
@@ -12,7 +12,7 @@ test: install
 
 cov: clean
 	@$(JSCOVERAGE) ./lib ./lib-cov
-	@NODE_CLUSTER_COV=1 $(MAKE) test REPORTER=landing
+	@NODE_CLUSTER_COV=1 $(MAKE) test REPORTER=dot
 	@NODE_CLUSTER_COV=1 $(MAKE) test REPORTER=html-cov > ./coverage.html
 
 clean:

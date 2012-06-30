@@ -60,7 +60,7 @@ describe('common functions', function() {
 
     /* {{{ connect() */
     var connect = function(handle, message) {
-      var res   = new require('net').Socket({
+      var res   = new net.Socket({
         'handle'    : handle,
       });
       res.readable  = true;
@@ -79,7 +79,7 @@ describe('common functions', function() {
       connect(handle, 'socket');
     });
 
-    var _me = require('net').createConnection(__dirname + '/a.socket');
+    var _me = net.createConnection(__dirname + '/a.socket');
     _me.on('data', function(data) {
       _me.end();
       data.toString().should.eql('socket');
@@ -90,7 +90,7 @@ describe('common functions', function() {
       }
     });
 
-    var _me = require('net').createConnection(11234);
+    var _me = net.createConnection(11234);
     _me.on('data', function(data) {
       _me.end();
       data.toString().should.eql('port');
