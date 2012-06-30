@@ -1,17 +1,21 @@
+TESTS = test/*.test.js
+REPORTER = spec
+TIMEOUT = 2000
+JSCOVERAGE = ./node_modules/visionmedia-jscoverage/jscoverage
+MOCHA = ./node_modules/mocha/bin/mocha
 
-JSCOVERAGE="./node_modules/visionmedia-jscoverage/jscoverage"
-
-test:
+install:
 	@npm install
-	@./node_modules/mocha/bin/mocha --reporter spec --timeout 2000 test/*.test.js
+
+test: install
+	@NODE_ENV=test $(MOCHA) --reporter $(REPORTER) --timeout $(TIMEOUT) $(TESTS)
 
 cov: clean
-	@npm install
-	@mv lib lib.bak && $(JSCOVERAGE) lib.bak lib 
-	-./node_modules/mocha/bin/mocha --reporter html-cov --timeout 2000 --ignore-leaks test/*.test.js > ./coverage.html
-	-rm -rf lib && mv lib.bak lib
+	@$(JSCOVERAGE) ./lib ./lib-cov
+	@NODE_CLUSTER_COV=1 $(MAKE) test REPORTER=landing
+	@NODE_CLUSTER_COV=1 $(MAKE) test REPORTER=html-cov > ./coverage.html
 
 clean:
-	-rm -rf ./coverage.html
+	@rm -rf ./coverage.html ./lib-cov
 
-.PHONY: test
+.PHONY: test clean install cov

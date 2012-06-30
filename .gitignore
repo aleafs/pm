@@ -3,3 +3,4 @@ coverage.html
 *.pid
 *.log
 *.swp
+lib-cov

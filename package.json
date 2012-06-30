@@ -1,10 +1,12 @@
 {
   "name": "node-cluster",
-    "version": "2.0.2-alpha",
+    "version": "2.0.3-alpha",
     "author": "Aleafs Zhang (zhangxc83@gmail.com)",
     "contributors": [
-      ],
-    "homepage": "git@github.com:aleafs/node-cluster.git",
+      {"name": "fengmk2", "email": "fengmk2@gmail.com", "web": "http://fengmk2.github.com"} 
+    ],
+    "homepage": "https://github.com/aleafs/node-cluster",
+    "repository": "git://github.com/aleafs/node-cluster.git",
     "description": "A graceful node library to contribute a permanent \"master-worker\" server.",
     "keywords": [ "cluster", "child-process", "master-worker" ],
     "dependencies": {},
@@ -12,8 +14,9 @@
       "node": ">=0.6.9"
     },
     "devDependencies": {
-      "should"        : ">=0.4.2",
-      "mocha"         : ">=0.9.0",
+      "should": ">=0.4.2",
+      "mocha": ">=0.9.0",
+      "rewire": ">=0.3.0",
       "visionmedia-jscoverage" : ">=1.0.0"
     },
     "main"  : "./index.js",
