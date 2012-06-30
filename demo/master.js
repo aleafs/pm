@@ -3,7 +3,8 @@
 var Util    = require('util');
 
 var Master  = require(__dirname + '/../').Master({
-  'pidfile' : __dirname + '/bench.pid',
+  'pidfile'    : __dirname + '/bench.pid',
+  'statusfile' : __dirname + '/status.log',
 });
 
 /**
