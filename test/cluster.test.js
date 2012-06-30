@@ -3,6 +3,8 @@
 var fs      = require('fs');
 var net     = require('net');
 var should  = require('should');
+var commonModule = require('../lib/common');
+commonModule.debug = function () {};
 var Cluster = require(__dirname + '/../');
 
 /* {{{ private function HttpRequest() */
@@ -106,7 +108,7 @@ describe('node-cluster v2.0.0-alpha', function() {
   var pidfile   = __dirname + '/test.pid';
   var master    = Cluster.Master({
     'pidfile'   : pidfile,
-      'statusfile'  : __dirname + '/status.log',
+    'statusfile': __dirname + '/status.log',
   });
 
   /* {{{ should_master_create_pidfile_works_fine() */
