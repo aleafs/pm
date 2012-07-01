@@ -79,21 +79,10 @@ describe('common.js', function () {
       pipe.onconnection('mock pipe handle');
     });
 
-    it('should throw error when listen at exists local sock', function (done) {
-      var pipe = common.listen(localSock, function (handle, port) {
-        handle.should.equal('mock pipe handle');
-        port.should.equal(localSock);
-        pipe.close();
-        done();
-      });
-
+    it('should throw error when listen at /tmp', function () {
       (function () {
-        common.listen(localSock, function (handle, port) {});
-      }).should.throw('Can not bind to ' + localSock);
-
-      should.exist(pipe);
-      should.ok(pipe instanceof Pipe);
-      pipe.onconnection('mock pipe handle');
+        common.listen('/tmp', function (handle, port) {});
+      }).should.throw('Can not bind to /tmp');
     });
 
     describe('mock listen() error', function () {
