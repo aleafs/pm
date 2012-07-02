@@ -1,6 +1,6 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 
-require(__dirname + '/../../').Worker().ready(function(socket) {
+require(__dirname + '/../../').Worker().ready(function (socket) {
   socket.setEncoding('ascii');
   socket.on('data', function (data) {
     if ('bye' === data.slice(0, 3)) {

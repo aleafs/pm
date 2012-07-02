@@ -4,27 +4,27 @@
  * @BufferHelper
  */
 /* {{{ */
-var BufferHelper    = function() {
+var BufferHelper    = function () {
   var chunk = [];
   var total = 0;
 
   var _me   = {};
-  _me.push  = function(data) {
+  _me.push  = function (data) {
     chunk.push(data);
     total += data.length;
   };
 
-  _me.join  = function() {
-    if (0 == chunk.length) {
+  _me.join  = function () {
+    if (0 === chunk.length) {
       return new Buffer(0);
     }
 
-    if (1 == chunk.length) {
+    if (1 === chunk.length) {
       return chunk[0];
     }
 
     var data  = new Buffer(total), pos = 0;
-    chunk.forEach(function(item) {
+    chunk.forEach(function (item) {
       item.copy(data, pos);
       pos += item.length;
     });
@@ -52,6 +52,6 @@ var server  = require('http').createServer(function (req, res) {
   });
 });
 
-require(__dirname + '/../../').Worker().ready(function(socket) {
+require(__dirname + '/../../').Worker().ready(function (socket) {
   server.emit('connection', socket);
 });

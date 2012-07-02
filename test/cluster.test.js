@@ -2,6 +2,7 @@
 
 var fs      = require('fs');
 var net     = require('net');
+var path    = require('path');
 var should  = require('should');
 var commonModule = require('../lib/common');
 commonModule.debug = function () {};
@@ -108,9 +109,20 @@ describe('common functions', function() {
 describe('node-cluster v2.0.0-alpha', function() {
 
   var pidfile   = __dirname + '/test.pid';
-  var master    = Cluster.Master({
-    'pidfile'   : pidfile,
-    'statusfile': __dirname + '/status.log',
+  var statusfile = __dirname + '/status.log';
+  var master;
+  var existsSync = fs.existsSync || path.existsSync;
+  before(function () {
+    existsSync(pidfile) && fs.unlinkSync(pidfile);
+    existsSync(statusfile) && fs.unlinkSync(statusfile);
+    master = Cluster.Master({
+      'pidfile'   : pidfile,
+      'statusfile': statusfile,
+    });
+  });
+  after(function () {
+    existsSync(pidfile) && fs.unlinkSync(pidfile);
+    existsSync(statusfile) && fs.unlinkSync(statusfile);
   });
 
   /* {{{ should_master_create_pidfile_works_fine() */
