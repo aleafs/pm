@@ -10,7 +10,7 @@
  * Module dependencies.
  */
 
-var Master  = require('../../').Master({
+var Master  = require('../../').createMaster({
   statusfile: __dirname + '/status.log',
 });
 
@@ -24,9 +24,5 @@ Master.register('http', __dirname + '/app.js', {
 
 Master.on('giveup', function (name, fatals) {
   console.warn('Master giveup to restart %s process after %d times.', name, fatals);
-});
-
-Master.on('state', function (name, current, before) {
-  console.log('Process state change for %s, current: %d, before: %d', name, current, before);
 });
 

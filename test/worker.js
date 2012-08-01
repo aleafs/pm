@@ -164,27 +164,6 @@ describe('worker.js', function () {
       processEvents.message({type: 'foo'});
     });
 
-    it('should send GET_FD message to master when get a WAKEUP message', function () {
-      processEvents.message({type: MESSAGE.WAKEUP});
-      lastSendData.type.should.equal(MESSAGE.GET_FD);
-      should.not.exist(lastSendData.data);
-    });
-
-    it('should accept(handle, port, callback) and send GET_FD to master when get a REQ_FD message and request queue not empty', function (done) {
-      lastSendData = null;
-      processEvents.message({type: MESSAGE.REQ_FD, port: 8080, data: 1}, createMockHandle(function () {
-        throw new Error('should not call close() method');
-      }));
-      lastReadyData.port.should.equal(8080);
-      lastReadyData.socket.should.be.a('object');
-      process.nextTick(function () {
-        should.exist(lastSendData);
-        lastSendData.type.should.equal(MESSAGE.GET_FD);
-        should.not.exist(lastSendData.data);
-        done();
-      });
-    });
-
     it('should accept(handle, port, callback) and change to waiting when get a REQ_FD message and request queue is empty', function (done) {
       lastSendData = null;
       processEvents.message({type: MESSAGE.REQ_FD, port: 8080, data: 0}, createMockHandle(function () {
@@ -195,30 +174,6 @@ describe('worker.js', function () {
       process.nextTick(function () {
         should.not.exist(lastSendData);
         done();
-      });
-    });
-
-    it('should direct listen a port when get a LISTEN message', function (done) {
-      var _listen = worker.__get__('listen');
-      worker.__set__({
-        listen: function (addr, callback) {
-          process.nextTick(function () {
-            callback(createMockHandle(), addr);
-          });
-          return createMockHandle();
-        }
-      });
-
-      lastReadyData = null;
-      processEvents.message({type: MESSAGE.LISTEN, data: 80});
-      process.nextTick(function () {
-        should.exist(lastReadyData);
-        lastReadyData.port.should.equal(80);
-        lastReadyData.socket.should.be.a('object');
-        done();
-      });
-      worker.__set__({
-        listen: _listen
       });
     });
 

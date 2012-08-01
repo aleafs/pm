@@ -230,46 +230,6 @@ describe('master.js', function () {
 
       });
 
-      it('should master send fd to worker when get GET_FD message', function (done) {
-        childrenSendDatas['9'] = null;
-        childrenEvents['9'].message({type: MESSAGE.GET_FD});
-        should.exist(childrenSendDatas['9']);
-        childrenSendDatas['9'].should.eql({
-          data: {
-            type: MESSAGE.REQ_FD,
-            data: 0,
-            port: undefined
-          },
-          handle: undefined
-        });
-
-        childrenSendDatas['9'] = null;
-        var s = net.connect(27149, function () {
-          should.not.exist(childrenSendDatas['9']);
-          process.nextTick(function () {
-            should.exist(childrenSendDatas['10']);
-            childrenSendDatas['10'].should.eql({
-              data: {
-                type: MESSAGE.WAKEUP
-              },
-              handle: undefined
-            });
-
-            childrenEvents['10'].message({type: MESSAGE.GET_FD});
-            should.exist(childrenSendDatas['10']);
-            childrenSendDatas['10'].data.should.eql({
-              type: MESSAGE.REQ_FD,
-              data: 0,
-              port: 27149
-            });
-            childrenSendDatas['10'].handle.should.be.a('object');
-
-            s.end();
-            done();
-          });
-        });
-      });
-
       it('should worker.on("exit") with code:-1', function (done) {
         ms.once('giveup', function (groupName, times) {
           groupName.should.equal('http');
@@ -313,7 +273,7 @@ describe('master.js', function () {
 
       it('should process.on("SIGUSR1")', function () {
         processEvents.SIGUSR1();
-        lastNOTICE.should.include('new worker forked');
+        lastNOTICE.should.include('Got SIGUSR1, about to reload');
       });
 
     });

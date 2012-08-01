@@ -1,6 +1,6 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 
-var worker  = require(__dirname + '/../../').Worker().ready();
+var worker  = require(__dirname + '/../../').createWorker().ready();
 worker.onmessage(function(msg) {
   switch (msg.toString()) {
     case 'fatal':

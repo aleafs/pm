@@ -1,6 +1,6 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 
-var worker  = require(__dirname + '/../../').Worker();
+var worker  = require(__dirname + '/../../').createWorker();
 var server  = require('http').createServer(function (req, res) {
 
   var chunk = '';

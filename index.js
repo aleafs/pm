@@ -12,7 +12,7 @@ var worker = require(libpath + '/worker.js');
  * @return {Master} the master instance.
  * @api public
  */
-exports.Master = function (options) {
+exports.createMaster = function (options) {
   return master.create(options);
 };
 
@@ -24,7 +24,7 @@ exports.Master = function (options) {
  * @return {Worker} this worker instance.
  * @api public
  */
-exports.Worker = function (options) {
+exports.createWorker = function (options) {
   return worker.create(options);
 };
 

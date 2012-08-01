@@ -52,6 +52,6 @@ var server  = require('http').createServer(function (req, res) {
   });
 });
 
-require(__dirname + '/../../').Worker().ready(function (socket) {
+require(__dirname + '/../../').createWorker().ready(function (socket) {
   server.emit('connection', socket);
 });

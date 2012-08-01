@@ -1,6 +1,6 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 
-var Master  = require(__dirname + '/../').Master({
+var Master  = require(__dirname + '/../').createMaster({
   'pidfile'    : __dirname + '/bench.pid',
   'statusfile' : __dirname + '/status.log',
 });
@@ -23,9 +23,5 @@ Master.register('http',   __dirname + '/worker/http.js', {
 Master.on('giveup', function (name, fatals) {
   //XXX: alert
   console.log('Master giveup to restart %s process after %d times.', name, fatals);
-});
-
-Master.on('state', function (name, current, before) {
-  console.log('Process state change for %s, current: %d, before: %d', name, current, before);
 });
 

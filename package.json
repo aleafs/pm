@@ -1,14 +1,14 @@
 {
-  "name": "node-cluster",
-    "version": "2.0.4-alpha",
+  "name": "pm",
+    "version": "1.0.0",
     "author": "Aleafs Zhang (zhangxc83@gmail.com)",
     "contributors": [
       {"name": "fengmk2", "email": "fengmk2@gmail.com", "web": "http://fengmk2.github.com"} 
     ],
-    "homepage": "https://github.com/aleafs/node-cluster",
-    "repository": "git://github.com/aleafs/node-cluster.git",
-    "description": "A graceful node library to contribute a permanent \"master-worker\" server.",
-    "keywords": [ "cluster", "child-process", "master-worker" ],
+    "homepage": "https://github.com/aleafs/pm",
+    "repository": "git://github.com/aleafs/pm.git",
+    "description": "Process Manager for Node.js, branched from node-cluster.",
+    "keywords": [ "process manager", "cluster", "child-process", "master-worker" ],
     "dependencies": {},
     "engines": {
       "node": ">=0.6.9"

@@ -20,7 +20,7 @@ var server33750 = http.createServer(function (req, res) {
   res.end('hello, I am listen on 33750.');
 });
 
-require('../../').Worker().ready(function (socket, port) {
+require('../../').createWorker().ready(function (socket, port) {
   console.log('Got new connection for %d', port);
   if (port === 33749) {
     server33749.emit('connection', socket);

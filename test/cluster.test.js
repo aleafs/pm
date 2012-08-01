@@ -115,7 +115,7 @@ describe('node-cluster v2.0.0-alpha', function() {
   before(function () {
     existsSync(pidfile) && fs.unlinkSync(pidfile);
     existsSync(statusfile) && fs.unlinkSync(statusfile);
-    master = Cluster.Master({
+    master = Cluster.createMaster({
       'pidfile'   : pidfile,
       'statusfile': statusfile,
     });
