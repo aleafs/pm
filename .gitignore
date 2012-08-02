@@ -1,3 +1,6 @@
 node_modules
 coverage.html
-test/*.pid
+*.pid
+*.log
+*.swp
+lib-cov

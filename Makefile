@@ -1,14 +1,21 @@
-SRC = $(shell find lib -type f -name "*.js")
 TESTS = test/*.js
-TESTTIMEOUT = 10000
-VERSION = $(shell date +%Y%m%d%H%M%S)
+REPORTER = spec
+TIMEOUT = 2000
+JSCOVERAGE = ./node_modules/visionmedia-jscoverage/jscoverage
+MOCHA = ./node_modules/mocha/bin/mocha
 
-test:
-	@NODE_ENV=test ./node_modules/mocha/bin/mocha \
-		--reporter spec --timeout $(TESTTIMEOUT) $(TESTS)
+install:
+	@npm install
 
-cov:
-	@JSCOV=1 ./node_modules/mocha/bin/mocha \
-		--reporter html-cov --timeout $(TESTTIMEOUT) $(TESTS) > coverage.html
+test: install
+	@NODE_ENV=test $(MOCHA) --reporter $(REPORTER) --timeout $(TIMEOUT) $(TESTS)
 
-.PHONY: test
+cov: clean
+	@$(JSCOVERAGE) ./lib ./lib-cov
+	@NODE_CLUSTER_COV=1 $(MAKE) test REPORTER=dot
+	@NODE_CLUSTER_COV=1 $(MAKE) test REPORTER=html-cov > ./coverage.html
+
+clean:
+	@rm -rf ./coverage.html ./lib-cov
+
+.PHONY: test clean install cov

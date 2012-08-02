@@ -1,22 +1,26 @@
 {
-  "name": "node-cluster",
-  "version": "0.1.17",
-  "author": "Aleafs Zhang (zhangxc83@gmail.com)",
-  "homepage": "https://github.com/aleafs/node-cluster",
-  "description": "A graceful node library to contribute a permanent \"master-worker\" server.",
-  "keywords": ["cluster", "child-process", "master-worker"],
-  "dependencies": {},
-  "engines": {
-    "node": ">=0.6.6"
-  },
-  "main": "lib/cluster.js",
-  "devDependencies": {
-    "connect": "=1.8.5",
-    "should": ">=0.4.2",
-    "mocha": ">=0.9.0",
-    "jscoverage":">=0.1.1"
-  },
-  "scripts": {
-    "test": "make test"
-  }
+  "name": "pm",
+    "version": "1.0.1",
+    "author": "Aleafs Zhang (zhangxc83@gmail.com)",
+    "contributors": [
+      {"name": "fengmk2", "email": "fengmk2@gmail.com", "web": "http://fengmk2.github.com"} 
+    ],
+    "homepage": "https://github.com/aleafs/pm",
+    "repository": "git://github.com/aleafs/pm.git",
+    "description": "Process Manager for Node.js, branched from node-cluster.",
+    "keywords": [ "process manager", "cluster", "child-process", "master-worker" ],
+    "dependencies": {},
+    "engines": {
+      "node": ">=0.6.9"
+    },
+    "devDependencies": {
+      "should": ">=0.4.2",
+      "mocha": ">=0.9.0",
+      "rewire": "*",
+      "visionmedia-jscoverage" : ">=1.0.0"
+    },
+    "main"  : "./index.js",
+    "scripts": {
+      "test": "make test"
+    }
 }

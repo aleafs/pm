@@ -1,5 +1,6 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 
+var worker  = require(__dirname + '/../../').createWorker();
 var server  = require('http').createServer(function (req, res) {
 
   var chunk = '';
@@ -8,9 +9,28 @@ var server  = require('http').createServer(function (req, res) {
   });
 
   req.on('end', function () {
+    var url   = req.url.split('?').shift().split('/')[1].toLowerCase();
+    switch (url) {
+      case 'cleancache':
+        worker.sendto('daemon', 'Please clean your cache');
+        break;
+
+      case 'reload':
+        worker.reload('daemon');
+        break;
+
+      case 'fatal':
+        worker.sendto('daemon', 'fatal');
+        break;
+
+      default:
+        break;
+    }
+
     res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
     res.end(JSON.stringify({
       'method'  : req.method,
+      'act'     : url,
       'url'     : req.url,
       'post'    : chunk,
     }));
@@ -20,6 +40,6 @@ var server  = require('http').createServer(function (req, res) {
 
 });
 
-require(__dirname + '/../../lib/cluster.js').Worker().ready(function(socket) {
+worker.ready(function(socket) {
   server.emit('connection', socket);
 });
