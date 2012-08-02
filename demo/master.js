@@ -10,6 +10,7 @@ var Master  = require(__dirname + '/../').createMaster({
  */
 Master.register('daemon', __dirname + '/worker/daemon.js', {
   'trace_gc': true,
+  'children': 1,
 });
 
 /**
@@ -17,8 +18,16 @@ Master.register('daemon', __dirname + '/worker/daemon.js', {
  */
 Master.register('http',   __dirname + '/worker/http.js', {
   'listen'  : [ 33749, __dirname + '/http.socket' ],
-  'children': 1,
 });
+
+if (1) {
+  /**
+   * should be force killed after 2.6 * 30 (s)
+   */
+  Master.register('while',   __dirname + '/worker/while.js', {
+    'children': 1,
+  });
+}
 
 Master.on('giveup', function (name, fatals) {
   //XXX: alert
