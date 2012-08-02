@@ -65,19 +65,19 @@ Below is the output from `git-summary`
 
 ```
  project: pm
- commits: 213
+ commits: 217
  files  : 23
  authors: 
-   177	aleafs                  83.1%
-    22	fengmk2                 10.3%
+   181	aleafs                  83.4%
+    22	fengmk2                 10.1%
      6	Jackson Tian            2.8%
      6	aleafs zhang            2.8%
      1	Will Wen Gunn           0.5%
      1	pengchun                0.5%
+
 ```
 
 ## License
 
 `pm` is published under MIT license.
 See license text in [LICENSE](https://github.com/aleafs/pm/blob/master/LICENSE) file.
-
