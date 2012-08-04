@@ -51,7 +51,7 @@ unit test
 $ make test
 ```
 
-jscoverage: [**75%**](http://fengmk2.github.com/coverage/pm.html)
+jscoverage: [**92%**](http://fengmk2.github.com/coverage/node-cluster.html)
 
 ```bash
 $ make cov
@@ -65,15 +65,15 @@ Below is the output from `git-summary`
 
 ```
  project: pm
- commits: 217
+ commits: 239
  files  : 23
  authors: 
-   181	aleafs                  83.4%
-    22	fengmk2                 10.1%
-     6	Jackson Tian            2.8%
-     6	aleafs zhang            2.8%
-     1	Will Wen Gunn           0.5%
-     1	pengchun                0.5%
+   199	aleafs                  83.3%
+    23	fengmk2                 9.6%
+     9	Jackson Tian            3.8%
+     6	aleafs zhang            2.5%
+     1	Will Wen Gunn           0.4%
+     1	pengchun                0.4%
 
 ```
 
@@ -81,3 +81,4 @@ Below is the output from `git-summary`
 
 `pm` is published under MIT license.
 See license text in [LICENSE](https://github.com/aleafs/pm/blob/master/LICENSE) file.
+
