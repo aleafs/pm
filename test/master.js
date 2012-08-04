@@ -123,7 +123,7 @@ describe('master.js', function () {
           listen: 27149,
           children: 4,
           max_request: 100
-        }).dispatch();
+        });
         __WORKERS_LIST.should.have.keys('http').with.be.a('object');
         childrenCount.should.equal(4);
         childrenEvents.should.have.keys('1', '2', '3', '4');
