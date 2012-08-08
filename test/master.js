@@ -23,7 +23,7 @@ describe('master.js', function () {
   var common = master.__get__('common');
   var NOTICE = master.__get__('NOTICE');
   var existsSync = fs.existsSync || path.existsSync;
-  var pidfile = __dirname + '/master.pid';
+  var pidfile = __dirname + '/test.pid';
   var statusfile = __dirname + '/master_status.log';
   var Master = master.__get__('Master');
   var __WORKERS_LIST = master.__get__('__WORKERS_LIST');
@@ -45,7 +45,7 @@ describe('master.js', function () {
   var lastNOTICE;
 
   before(function () {
-    existsSync(pidfile) && fs.unlinkSync(pidfile);
+    // existsSync(pidfile) && fs.unlinkSync(pidfile);
     existsSync(statusfile) && fs.unlinkSync(statusfile);
     master.__set__({
       NOTICE: function (msg) {
@@ -87,7 +87,7 @@ describe('master.js', function () {
   });
 
   after(function () {
-    existsSync(pidfile) && fs.unlinkSync(pidfile);
+    // existsSync(pidfile) && fs.unlinkSync(pidfile);
     existsSync(statusfile) && fs.unlinkSync(statusfile);
     master.__set__({
       NOTICE: NOTICE
@@ -120,7 +120,7 @@ describe('master.js', function () {
 
         var httpfile = __dirname + '/fixtures/http.js';
         ms.register('http', httpfile, {
-          listen: 27149,
+          listen: 27150,
           children: 4,
           max_request: 100
         });

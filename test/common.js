@@ -38,9 +38,9 @@ describe('common.js', function () {
     });
 
     it('should return tcp object when listen at number port', function (done) {
-      var tcp = common.listen(8080, function (handle, port) {
+      var tcp = common.listen(20461, function (handle, port) {
         handle.should.equal('mock handle');
-        port.should.equal(8080);
+        port.should.equal(20461);
         tcp.close();
         done();
       });
@@ -50,15 +50,15 @@ describe('common.js', function () {
     });
 
     it('should return tcp object when listen at string number port', function (done) {
-      var tcp = common.listen('8080', function (handle, port) {
-        handle.should.equal('mock handle 8080');
-        port.should.equal(8080);
+      var tcp = common.listen('20461', function (handle, port) {
+        handle.should.equal('mock handle 20461');
+        port.should.equal(20461);
         tcp.close();
         done();
       });
       should.exist(tcp);
       should.ok(tcp instanceof TCP);
-      tcp.onconnection('mock handle 8080');
+      tcp.onconnection('mock handle 20461');
     });
 
     it('should throw error when listen at 80 no perm', function () {

@@ -1,6 +1,6 @@
 TESTS = test/*.js
 REPORTER = spec
-TIMEOUT = 2000
+TIMEOUT = 8000
 JSCOVERAGE = ./node_modules/visionmedia-jscoverage/jscoverage
 MOCHA = ./node_modules/mocha/bin/mocha
 
@@ -8,7 +8,8 @@ install:
 	@npm install
 
 test: install
-	@NODE_ENV=test $(MOCHA) --reporter $(REPORTER) --timeout $(TIMEOUT) $(TESTS)
+	@NODE_ENV=test $(MOCHA) --reporter $(REPORTER) --timeout $(TIMEOUT) \
+		$(MOCHA_OPTS) $(TESTS)
 
 cov: clean
 	@$(JSCOVERAGE) ./lib ./lib-cov
