@@ -4,6 +4,7 @@ var fs      = require('fs');
 var net     = require('net');
 var path    = require('path');
 var should  = require('should');
+var pedding = require('./utils/pedding');
 var commonModule = require('../lib/common');
 commonModule.debug = function () {};
 var Cluster = require(__dirname + '/../');
@@ -30,6 +31,9 @@ var HttpRequest = function(port, url, post, callback) {
       callback(chunk);
     });
   });
+  _client.once('error', function (err) {
+    callback(err);
+  });
   _client.end(post || '');
 };
 /* }}} */
@@ -37,8 +41,8 @@ var HttpRequest = function(port, url, post, callback) {
 /* {{{ private function ProcessIds() */
 var ProcessIds  = function(cmd, callback) {
   var command   = require('util').format(
-      'ps uxwwww | grep "%s" | grep -v grep | awk \'{print $2}\'', cmd
-      );
+    'ps uxwwww | grep "%s" | grep -v grep | awk \'{print $2}\'', cmd
+  );
   require('child_process').exec(command, function(error, stdout) {
     var ids = [];
     stdout.trim().split("\n").forEach(function(pid) {
@@ -110,19 +114,24 @@ describe('node-cluster v2.0.0-alpha', function() {
 
   var pidfile   = __dirname + '/test.pid';
   var statusfile = __dirname + '/status.log';
+  var socketfile = __dirname + '/echo.socket';
   var master;
   var existsSync = fs.existsSync || path.existsSync;
   before(function () {
-    existsSync(pidfile) && fs.unlinkSync(pidfile);
+    // existsSync(pidfile) && fs.unlinkSync(pidfile);
     existsSync(statusfile) && fs.unlinkSync(statusfile);
+    existsSync(socketfile) && fs.unlinkSync(socketfile);
     master = Cluster.createMaster({
       'pidfile'   : pidfile,
       'statusfile': statusfile,
     });
   });
-  after(function () {
-    existsSync(pidfile) && fs.unlinkSync(pidfile);
+  after(function (done) {
+    // existsSync(pidfile) && fs.unlinkSync(pidfile);
     existsSync(statusfile) && fs.unlinkSync(statusfile);
+    existsSync(socketfile) && fs.unlinkSync(socketfile);
+    // waiting for process to exit
+    setTimeout(done, 1000);
   });
 
   /* {{{ should_master_create_pidfile_works_fine() */
@@ -142,10 +151,9 @@ describe('node-cluster v2.0.0-alpha', function() {
     var num = 0;
 
     var _shutdown   = function() {
-      ProcessIds('/fixtures/echo.js', function(error, ids) {
+      ProcessIds(__dirname + '/fixtures/echo.js', function(error, ids) {
         should.ok(!error);
         ids.should.have.property('length', 1);
-
         var pid = ids.pop();
         master.reload('echo');
 
@@ -160,37 +168,38 @@ describe('node-cluster v2.0.0-alpha', function() {
           });
           _list.should.have.property('length', 1);
           master.shutdown(function () {
+            // wait for process to exit
+            setTimeout(function () {
+              ProcessIds(__dirname + '/fixtures/echo.js', function(error, ids) {
+                ids.should.length(0);
+                done(error);
+              });
+            }, 1000);
           }, 'SIGTERM', 'echo');
-          done();
         });
       });
     };
+    _shutdown = pedding(2, _shutdown);
 
     master.register('echo', __dirname + '/fixtures/echo.js', {
       'children'    : 1,
-      'listen' : [11233, __dirname + '/echo.socket'],
+      'listen' : [11233, socketfile],
     });
 
-    ++num;
     var _c1 = require('net').createConnection(11233, '127.0.0.1', function() {
       _c1.on('data', function(data) {
         data.toString().should.eql('<- hello');
         _c1.end();
-        if ((--num) === 0) {
-          _shutdown();
-        }
+        _shutdown();
       });
       _c1.write('hello');
     });
 
-    ++num;
-    var _c2 = require('net').createConnection(__dirname + '/echo.socket', function() {
+    var _c2 = require('net').createConnection(socketfile, function() {
       _c2.on('data', function(data) {
         data.toString().should.eql('<- world');
         _c2.end();
-        if ((--num) === 0) {
-          _shutdown();
-        }
+        _shutdown();
       });
       _c2.write('world');
     });
@@ -198,40 +207,38 @@ describe('node-cluster v2.0.0-alpha', function() {
   /* }}} */
 
   /* {{{ should_with_1_http_server_works_fine() */
-  it('should_with_1_http_server_works_fine', function(done) {
-
-    var num = 0;
-
+  it('should_with_1_http_server_works_fine', function(_done) {
     master.register('http1', __dirname + '/fixtures/http.js', {
       'listen'  : [11234],
     });
 
-    ++num;
-    ProcessIds('/fixtures/http.js', function(error, data) {
-      data.should.have.property('length', require('os').cpus().length);
-      if ((--num) === 0) {
-        master.shutdown(undefined, 'SIGTERM', 'http1');
-        done();
-      }
+    var done = pedding(2, function (err) {
+      master.shutdown(undefined, 'SIGTERM', 'http1');
+      _done(err);
     });
 
-    ++num;
-    HttpRequest(11234, '/sdew/dfewf?dfewf', 'aabb=cdef', function(data) {
-      data.toString().should.eql(JSON.stringify({
-        'url'   : '/sdew/dfewf?dfewf',
-        'data'  : 'aabb=cdef',
-      }));
-      if ((--num) === 0) {
-        master.shutdown(undefined, 'SIGTERM', 'http1');
-        done();
-      }
+    ProcessIds(__dirname + '/fixtures/http.js', function(error, data) {
+      data.should.have.property('length', require('os').cpus().length);
+      done();
     });
+
+    // wait process to listen
+    setTimeout(function () {
+      HttpRequest(11234, '/sdew/dfewf?dfewf', 'aabb=cdef', function(data) {
+        data.toString().should.eql(JSON.stringify({
+          'url'   : '/sdew/dfewf?dfewf',
+          'data'  : 'aabb=cdef',
+        }));
+        done();
+      });
+    }, 500);
+    
   });
   /* }}} */
 
   /* {{{ should_exit_and_restart_works_fine() */
   xit('should_exit_and_restart_works_fine', function(done) {
-    ProcessIds('/fixtures/echo.js', function(error, ids) {
+    ProcessIds(__dirname + '/fixtures/echo.js', function(error, ids) {
       should.ok(!error);
       ids.length.should.eql(1);
 
@@ -250,14 +257,12 @@ describe('node-cluster v2.0.0-alpha', function() {
 
   /* {{{ should_will_not_restart_when_stoped() */
   it('should_will_not_restart_when_stoped', function(done) {
-    ProcessIds('/fixtures/echo.js', function(error, ids) {
-      ids.length.should.eql(1);
-      master.shutdown(function() {
-      }, 'SIGTERM', 'echo');
+    ProcessIds(__dirname + '/fixtures/echo.js', function(error, ids) {
+      ids.length.should.eql(0);
+      master.shutdown(function() {}, 'SIGTERM', 'echo');
 
-      process.kill(ids.pop(), 'SIGKILL');
       setTimeout(function() {
-        ProcessIds('/fixtures/echo.js', function(error, ids) {
+        ProcessIds(__dirname + '/fixtures/echo.js', function(error, ids) {
           should.ok(!error);
           ids.should.have.property('length', 0);
           done();
