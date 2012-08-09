@@ -82,6 +82,7 @@ describe('master.js', function () {
           };
         }
       };
+
       return child;
     };
   });
@@ -155,7 +156,7 @@ describe('master.js', function () {
         }
       });
 
-      it('should new child and kill old child process when scores > max_request', function () {
+      it('should new child and kill old child process when scores > max_request', function (done) {
         var pid, events, stat;
         var count = 4;
         for (pid in childrenEvents) {
@@ -169,39 +170,52 @@ describe('master.js', function () {
           count++;
           childrenCount.should.equal(count);
         }
+
         childrenEvents.should.have.keys('4', '5', '6', '7', '8');
         killedPids.should.eql([[1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM']]);
 
-        childrenEvents['8'].message({type: MESSAGE.STATUS, data: {
-          mem: process.memoryUsage(),
-          scores: 1,
-          status: STATUS.RUNNING
-        }});
+        // check status again, let process 4 kill
+        for (pid in childrenEvents) {
+          childrenEvents[pid].message({type: MESSAGE.STATUS, data: {
+            mem: process.memoryUsage(),
+            scores: 1,
+            status: STATUS.RUNNING
+          }});
+        }
 
-        childrenEvents.should.have.keys('5', '6', '7', '8');
-        killedPids.should.eql([[1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM'], [4, 'SIGTERM']]);
-        childrenCount.should.equal(8);
+        setTimeout(function () {
+          childrenEvents.should.have.keys('5', '6', '7', '8');
+          killedPids.should.eql([[1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM'], [4, 'SIGTERM']]);
+          childrenCount.should.equal(8);
+          done();
+        }, 50);
       });
 
-      it('should reload fork new 4 children when get RELOAD message', function () {
+      it('should reload fork new 4 children when get RELOAD message', function (done) {
         var count = childrenCount;
         childrenEvents['8'].message({type: MESSAGE.RELOAD, data: {}});
         childrenCount.should.equal(count + 4);
         childrenEvents.should.have.keys('5', '6', '7', '8', '9', '10', '11', '12');
         killedPids.should.eql([[1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM'], [4, 'SIGTERM']]);
 
-        childrenEvents['9'].message({type: MESSAGE.STATUS, data: {
-          mem: process.memoryUsage(),
-          scores: 1,
-          status: STATUS.RUNNING
-        }});
+        // let worker set a status, set the `._time`
+        for (var pid in childrenEvents) {
+          childrenEvents[pid].message({type: MESSAGE.STATUS, data: {
+            mem: process.memoryUsage(),
+            scores: 1,
+            status: STATUS.RUNNING
+          }});
+        }
 
-        childrenEvents.should.have.keys('9', '10', '11', '12');
-        killedPids.should.eql([
-          [1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM'], [4, 'SIGTERM'],
-          [5, 'SIGTERM'], [6, 'SIGTERM'], [7, 'SIGTERM'], [8, 'SIGTERM']
-        ]);
-        childrenCount.should.equal(count + 4);
+        setTimeout(function () {
+          childrenEvents.should.have.keys('9', '10', '11', '12');
+          killedPids.should.eql([
+            [1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM'], [4, 'SIGTERM'],
+            [5, 'SIGTERM'], [6, 'SIGTERM'], [7, 'SIGTERM'], [8, 'SIGTERM']
+          ]);
+          childrenCount.should.equal(count + 4);
+          done();
+        }, 50);
       });
 
       it('should send message to one group when get SENDTO message', function () {

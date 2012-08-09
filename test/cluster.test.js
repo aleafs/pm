@@ -131,7 +131,7 @@ describe('node-cluster v2.0.0-alpha', function() {
     existsSync(statusfile) && fs.unlinkSync(statusfile);
     existsSync(socketfile) && fs.unlinkSync(socketfile);
     // waiting for process to exit
-    setTimeout(done, 2000);
+    setTimeout(done, 1000);
   });
 
   /* {{{ should_master_create_pidfile_works_fine() */

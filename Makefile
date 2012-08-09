@@ -1,6 +1,6 @@
 TESTS = test/*.js
 REPORTER = spec
-TIMEOUT = 8000
+TIMEOUT = 5000
 JSCOVERAGE = ./node_modules/visionmedia-jscoverage/jscoverage
 MOCHA = ./node_modules/mocha/bin/mocha
 
