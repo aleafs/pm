@@ -23,7 +23,7 @@ describe('master.js', function () {
   var common = master.__get__('common');
   var NOTICE = master.__get__('NOTICE');
   var existsSync = fs.existsSync || path.existsSync;
-  var pidfile = __dirname + '/master.pid';
+  var pidfile = __dirname + '/test.pid';
   var statusfile = __dirname + '/master_status.log';
   var Master = master.__get__('Master');
   var __WORKERS_LIST = master.__get__('__WORKERS_LIST');
@@ -45,7 +45,7 @@ describe('master.js', function () {
   var lastNOTICE;
 
   before(function () {
-    existsSync(pidfile) && fs.unlinkSync(pidfile);
+    // existsSync(pidfile) && fs.unlinkSync(pidfile);
     existsSync(statusfile) && fs.unlinkSync(statusfile);
     master.__set__({
       NOTICE: function (msg) {
@@ -82,12 +82,13 @@ describe('master.js', function () {
           };
         }
       };
+
       return child;
     };
   });
 
   after(function () {
-    existsSync(pidfile) && fs.unlinkSync(pidfile);
+    // existsSync(pidfile) && fs.unlinkSync(pidfile);
     existsSync(statusfile) && fs.unlinkSync(statusfile);
     master.__set__({
       NOTICE: NOTICE
@@ -120,7 +121,7 @@ describe('master.js', function () {
 
         var httpfile = __dirname + '/fixtures/http.js';
         ms.register('http', httpfile, {
-          listen: 27149,
+          listen: 27150,
           children: 4,
           max_request: 100
         });
@@ -155,7 +156,7 @@ describe('master.js', function () {
         }
       });
 
-      it('should new child and kill old child process when scores > max_request', function () {
+      it('should new child and kill old child process when scores > max_request', function (done) {
         var pid, events, stat;
         var count = 4;
         for (pid in childrenEvents) {
@@ -169,39 +170,52 @@ describe('master.js', function () {
           count++;
           childrenCount.should.equal(count);
         }
+
         childrenEvents.should.have.keys('4', '5', '6', '7', '8');
         killedPids.should.eql([[1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM']]);
 
-        childrenEvents['8'].message({type: MESSAGE.STATUS, data: {
-          mem: process.memoryUsage(),
-          scores: 1,
-          status: STATUS.RUNNING
-        }});
+        // check status again, let process 4 kill
+        for (pid in childrenEvents) {
+          childrenEvents[pid].message({type: MESSAGE.STATUS, data: {
+            mem: process.memoryUsage(),
+            scores: 1,
+            status: STATUS.RUNNING
+          }});
+        }
 
-        childrenEvents.should.have.keys('5', '6', '7', '8');
-        killedPids.should.eql([[1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM'], [4, 'SIGTERM']]);
-        childrenCount.should.equal(8);
+        setTimeout(function () {
+          childrenEvents.should.have.keys('5', '6', '7', '8');
+          killedPids.should.eql([[1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM'], [4, 'SIGTERM']]);
+          childrenCount.should.equal(8);
+          done();
+        }, 50);
       });
 
-      it('should reload fork new 4 children when get RELOAD message', function () {
+      it('should reload fork new 4 children when get RELOAD message', function (done) {
         var count = childrenCount;
         childrenEvents['8'].message({type: MESSAGE.RELOAD, data: {}});
         childrenCount.should.equal(count + 4);
         childrenEvents.should.have.keys('5', '6', '7', '8', '9', '10', '11', '12');
         killedPids.should.eql([[1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM'], [4, 'SIGTERM']]);
 
-        childrenEvents['9'].message({type: MESSAGE.STATUS, data: {
-          mem: process.memoryUsage(),
-          scores: 1,
-          status: STATUS.RUNNING
-        }});
+        // let worker set a status, set the `._time`
+        for (var pid in childrenEvents) {
+          childrenEvents[pid].message({type: MESSAGE.STATUS, data: {
+            mem: process.memoryUsage(),
+            scores: 1,
+            status: STATUS.RUNNING
+          }});
+        }
 
-        childrenEvents.should.have.keys('9', '10', '11', '12');
-        killedPids.should.eql([
-          [1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM'], [4, 'SIGTERM'],
-          [5, 'SIGTERM'], [6, 'SIGTERM'], [7, 'SIGTERM'], [8, 'SIGTERM']
-        ]);
-        childrenCount.should.equal(count + 4);
+        setTimeout(function () {
+          childrenEvents.should.have.keys('9', '10', '11', '12');
+          killedPids.should.eql([
+            [1, 'SIGTERM'], [2, 'SIGTERM'], [3, 'SIGTERM'], [4, 'SIGTERM'],
+            [5, 'SIGTERM'], [6, 'SIGTERM'], [7, 'SIGTERM'], [8, 'SIGTERM']
+          ]);
+          childrenCount.should.equal(count + 4);
+          done();
+        }, 50);
       });
 
       it('should send message to one group when get SENDTO message', function () {
