@@ -9,6 +9,11 @@ var commonModule = require('../lib/common');
 commonModule.debug = function () {};
 var Cluster = require(__dirname + '/../');
 
+var onexit  = process.exit;
+beforeEach(function () {
+  process.exit = function (code) {};
+});
+
 /* {{{ private function HttpRequest() */
 var HttpRequest = function(port, url, post, callback) {
   var options = {
@@ -174,7 +179,7 @@ describe('node-cluster v2.0.0-alpha', function() {
                 ids.should.length(0);
                 done(error);
               });
-            }, 1000);
+            }, 1200);
           }, 'SIGTERM', 'echo');
         });
       });
@@ -295,3 +300,6 @@ describe('node-cluster v2.0.0-alpha', function() {
 
 });
 
+afterEach(function () {
+  process.exit = onexit;
+});

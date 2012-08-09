@@ -280,9 +280,9 @@ describe('master.js', function () {
         lastNOTICE.should.equal('SIGKILL exited');
       });
 
-      it('should process.on("SIGUSR1")', function () {
+      it('should process.on("SIGTERM")', function () {
         processEvents.SIGTERM();
-        lastNOTICE.should.equal('SIGTERM exited');
+        lastNOTICE.should.equal('Got SIGTERM, about to exit...');
       });
 
       it('should process.on("SIGUSR1")', function () {
