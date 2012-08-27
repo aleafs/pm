@@ -230,10 +230,11 @@ describe('node-cluster v2.0.0-alpha', function() {
     // wait process to listen
     setTimeout(function () {
       HttpRequest(11234, '/sdew/dfewf?dfewf', 'aabb=cdef', function(data) {
-        data.toString().should.eql(JSON.stringify({
+        JSON.parse(data).should.eql({
           'url'   : '/sdew/dfewf?dfewf',
           'data'  : 'aabb=cdef',
-        }));
+          PM_GROUP: 'http1'
+        });
         done();
       });
     }, 500);
@@ -246,7 +247,6 @@ describe('node-cluster v2.0.0-alpha', function() {
     ProcessIds(__dirname + '/fixtures/echo.js', function(error, ids) {
       should.ok(!error);
       ids.length.should.eql(1);
-
       var pid1  = ids.pop();
       process.kill(pid1, 'SIGKILL');
       setTimeout(function() {
