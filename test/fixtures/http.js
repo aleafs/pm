@@ -47,6 +47,7 @@ var server  = require('http').createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain;charset=utf-8'});
     res.end(JSON.stringify({
       'url' : req.url,
+      'PM_GROUP' : process.env.PM_GROUP, 
       'data': chunk.join().toString(),
     }));
   });
