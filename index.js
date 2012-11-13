@@ -1,8 +1,7 @@
 /* vim: set expandtab tabstop=2 shiftwidth=2 foldmethod=marker: */
 
-var libpath = process.env.NODE_CLUSTER_COV ? './lib-cov' : './lib';
-var master = require(libpath + '/master.js');
-var worker = require(libpath + '/worker.js');
+var master = require(__dirname + '/lib/master.js');
+var worker = require(__dirname + '/lib/worker.js');
 
 /**
  * Create a `Master`.
