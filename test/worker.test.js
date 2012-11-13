@@ -27,6 +27,7 @@ afterEach(function () {
 
 describe('worker process', function () {
 
+  /* {{{ should_worker_hearbeat_works_fine() */
   it('should_worker_hearbeat_works_fine', function () {
 
     var _me = worker.create({
@@ -39,7 +40,6 @@ describe('worker process', function () {
       log.log(arguments);
     });
 
-    var pro = worker.__get__('process');
     _me.broadcast('who', 'test msg');
 
     log.__getMessages().pop().should.eql(['log', {
@@ -47,8 +47,16 @@ describe('worker process', function () {
       '1' : '{"type":"broadcast","data":{"who":"who","msg":"test msg"}}'
     }]);
 
+    _me.listen(__dirname + '/a.socket', function (socket) {
+      socket.on('data', function (data) {
+        data.toString().should.eql('test');
+      });
+    });
+
+    var pro = worker.__get__('process');
     pro.emit('SIGTERM');
     pro.__getEvents().pop().should.eql({'0':'SIGTERM'});
   });
+  /* }}} */
 
 });
