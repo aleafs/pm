@@ -47,10 +47,8 @@ describe('worker process', function () {
       '1' : '{"type":"broadcast","data":{"who":"who","msg":"test msg"}}'
     }]);
 
-    _me.listen(__dirname + '/a.socket', function (socket) {
-      socket.on('data', function (data) {
-        data.toString().should.eql('test');
-      });
+    _me.ready(function (socket, which) {
+      socket.close();
     });
 
     var pro = worker.__get__('process');
