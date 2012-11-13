@@ -8,12 +8,12 @@ test:
 	@npm install
 	@$(MOCHA) --reporter $(REPORTER) --timeout $(TIMEOUT) $(MOCHA_OPTS) $(TESTS)
 
-cov: clean
+cov:
 	@npm install
-	-rm -rf lib.bak
-	-mv -f lib lib.bak
-	@$(JSCOVERAGE) lib.bak lib
-	@$(MOCHA) --reporter html-cov --timeout $(TIMEOUT) $(MOCHA_OPTS) $(TESTS) > ./coverage.html
-	-rm -rf lib && mv -f lib.bak lib
+	@-rm -rf lib.bak
+	@-mv -f lib lib.bak
+	$(JSCOVERAGE) lib.bak lib
+	$(MOCHA) --reporter html-cov --timeout $(TIMEOUT) $(MOCHA_OPTS) $(TESTS) > ./coverage.html
+	@-rm -rf lib && mv -f lib.bak lib
 
 .PHONY: test

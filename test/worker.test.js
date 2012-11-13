@@ -26,11 +26,23 @@ describe('worker process', function () {
     });
 
     var msg = [];
-    _me.setLogger(function (msg) {
-      msg.push(msg);
+    _me.setLogger(function () {
+      msg.push(arguments);
     });
 
     var pro = worker.__get__('process');
+    _me.broadcast('who', 'test msg');
+    msg.pop().should.eql({
+      '0' : '_SEND',
+      '1' : '{"type":"broadcast","data":{"who":"who","msg":"test msg"}}'
+    });
+
+
+    /**
+    pro.__getOutMessage().pop().should.eql({
+    });
+    */
+
     pro.emit('SIGTERM');
     pro.__getEvents().pop().should.eql({'0':'SIGTERM'});
   });
