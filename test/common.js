@@ -48,3 +48,21 @@ exports.mockProcess = function () {
 
   return new Process();
 };
+
+exports.mockConsole = function () {
+
+  var message = [];
+
+  var _me = {};
+  ['log', 'error'].forEach(function (i) {
+    _me[i] = function (msg) {
+      message.push([i, msg]);
+    };
+  });
+
+  _me.__getMessages = function () {
+    return message;
+  };
+
+  return _me;
+};

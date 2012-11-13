@@ -4,16 +4,25 @@
 
 var rewire = require('rewire');
 var should = require('should');
+var Common = require(__dirname + '/common.js');
+
 var worker = rewire(__dirname + '/../lib/worker.js');
 
 var _PROCESS = worker.__get__('process');
+var _CONSOLE = worker.__get__('console');
 
 beforeEach(function () {
-  worker.__set__('process', require(__dirname + '/common.js').mockProcess());
+  worker.__set__({
+    'process' : Common.mockProcess(),
+    'console' : Common.mockConsole(),
+  });
 });
 
 afterEach(function () {
-  worker.__set__('process', _PROCESS);
+  worker.__set__({
+    'process' : _PROCESS,
+    'console' : _CONSOLE,
+  });
 });
 
 describe('worker process', function () {
@@ -25,23 +34,18 @@ describe('worker process', function () {
       'terminate_timeout'  : 200,
     });
 
-    var msg = [];
+    var log = worker.__get__('console');
     _me.setLogger(function () {
-      msg.push(arguments);
+      log.log(arguments);
     });
 
     var pro = worker.__get__('process');
     _me.broadcast('who', 'test msg');
-    msg.pop().should.eql({
+
+    log.__getMessages().pop().should.eql(['log', {
       '0' : '_SEND',
       '1' : '{"type":"broadcast","data":{"who":"who","msg":"test msg"}}'
-    });
-
-
-    /**
-    pro.__getOutMessage().pop().should.eql({
-    });
-    */
+    }]);
 
     pro.emit('SIGTERM');
     pro.__getEvents().pop().should.eql({'0':'SIGTERM'});
