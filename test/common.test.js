@@ -10,6 +10,10 @@ var common = require(__dirname + '/../lib/common.js');
 
 describe('common functions', function () {
 
+  it('handle_close_after_bind_failed', function () {
+    should.ok(!common.getHandle('/i/am/denied.socket'));
+  });
+
   [33046, '33046', __dirname + '/a.socket'].forEach(function (idx) {
     it('listen at: ' + idx, function (done) {
       var _me = http.createServer(function (req, res) {

@@ -2,19 +2,34 @@
 
 "use strict";
 
+var rewire = require('rewire');
 var should = require('should');
-var PROCESS = require(__dirname + '/mock.js').mockProcess();
-var master = require(__dirname + '/../lib/master.js').create({}, PROCESS);
+var common = require(__dirname + '/mock.js');
+var master = rewire(__dirname + '/../lib/master.js');
 
+var PROCESS;
+var ___messages = [];
 beforeEach(function () {
+  PROCESS = common.mockProcess();
   PROCESS.makesureCleanAllMessage();
   PROCESS.__getOutMessage().should.eql([]);
   PROCESS.__getEvents().should.eql([]);
+
+  ___messages = [];
+  master.__set__({
+    'PROCESS' : PROCESS,
+    'fork'  : function () {
+      ___messages.push(arguments);
+    },
+  });
 });
 
 describe('master', function () {
 
   it('', function () {
+    var _me = master.create();
+    _me.shutdown();
+    PROCESS.emit('SIGUSR1');
   });
 
 });
