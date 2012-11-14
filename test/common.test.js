@@ -11,7 +11,7 @@ var common = require(__dirname + '/../lib/common.js');
 describe('common functions', function () {
 
   [33046, '33046', __dirname + '/a.socket'].forEach(function (idx) {
-    it('should_listen_at_' + idx + '_works_fine', function (done) {
+    it('listen at: ' + idx, function (done) {
       var _me = http.createServer(function (req, res) {
         res.end(req.url);
       });

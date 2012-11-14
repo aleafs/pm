@@ -24,8 +24,14 @@ exports.mockProcess = function () {
 
   var Process = function () {
     Emitter.call(this);
+    this.env  = {};
+    this.pid  = 1;
   };
   util.inherits(Process, Emitter);
+
+  Process.prototype.cwd = function () {
+    return __dirname + '/..';
+  };
 
   Process.prototype.makesureCleanAllMessage = function () {
     message = [];
@@ -52,6 +58,10 @@ exports.mockProcess = function () {
   Process.prototype.exit = function (code) {
     _events.push(['exit', code || 0]);
     this.emit('exit', code);
+  };
+
+  Process.prototype.kill = function (pid, signal) {
+    _events.push(['kill', pid, signal]);
   };
 
   return new Process();
