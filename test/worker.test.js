@@ -125,6 +125,7 @@ describe('worker process', function () {
       for (var i = 0; i < n; i++) {
         http.get(options, function (res) {
           res.headers.should.have.property('x-lalla', '/aabbce');
+          PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('33046'));
           if (0 === (--n)) {
             PROCESS.emit('message', {'type' : 'suicide'});
             PROCESS.emit('SIGTERM');

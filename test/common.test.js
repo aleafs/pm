@@ -10,7 +10,7 @@ var common = require(__dirname + '/../lib/common.js');
 
 describe('common functions', function () {
 
-  [33046, /*__dirname + '/a.socket'*/].forEach(function (idx) {
+  [33046, '33046', /*__dirname + '/a.socket'*/].forEach(function (idx) {
     it('should_listen_at_' + idx + '_works_fine', function (done) {
       var _me = http.createServer(function (req, res) {
         res.end(req.url);
@@ -21,7 +21,7 @@ describe('common functions', function () {
         };
         if ('number' === (typeof idx) || idx.match(/^\d+$/)) {
           options.host = 'localhost';
-          options.port = idx;
+          options.port = Number(idx);
         } else {
           options.socketPath = idx;
         }
