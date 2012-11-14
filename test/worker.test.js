@@ -2,58 +2,100 @@
 
 "use strict";
 
-var rewire = require('rewire');
+var net = require('net');
 var should = require('should');
 var Common = require(__dirname + '/common.js');
+var worker = require(__dirname + '/../lib/worker.js');
 
-var worker = rewire(__dirname + '/../lib/worker.js');
-
-var _PROCESS = worker.__get__('process');
-var _CONSOLE = worker.__get__('console');
+var PROCESS = Common.mockProcess();
 
 beforeEach(function () {
-  worker.__set__({
-    'process' : Common.mockProcess(),
-    'console' : Common.mockConsole(),
-  });
+  PROCESS.makesureCleanAllMessage();
+  PROCESS.__getOutMessage().should.eql([]);
+  PROCESS.__getEvents().should.eql([]);
 });
 
-afterEach(function () {
-  worker.__set__({
-    'process' : _PROCESS,
-    'console' : _CONSOLE,
-  });
-});
+var _Handle = function (name) {
+  return net._createServerHandle(__dirname + '/' + name + '.socket', -1, -1);
+};
 
 describe('worker process', function () {
 
-  /* {{{ should_worker_hearbeat_works_fine() */
-  it('should_worker_hearbeat_works_fine', function () {
+  /* {{{ should_hearbeat_works_fine() */
+  it('should_hearbeat_works_fine', function (done) {
 
     var _me = worker.create({
       'heartbeat_interval' : 10,
       'terminate_timeout'  : 200,
-    });
-
-    var log = worker.__get__('console');
-    _me.setLogger(function () {
-      log.log(arguments);
-    });
+    }, PROCESS);
 
     _me.broadcast('who', 'test msg');
-
-    log.__getMessages().pop().should.eql(['log', {
-      '0' : '_SEND',
-      '1' : '{"type":"broadcast","data":{"who":"who","msg":"test msg"}}'
-    }]);
+    PROCESS.__getOutMessage().pop().should.eql([{
+      'type' : 'broadcast',
+      'data' : {'who' : 'who', 'msg' : 'test msg'}
+    }, undefined]);
 
     _me.ready(function (socket, which) {
       socket.close();
     });
+    PROCESS.__getOutMessage().pop().should.eql([{
+      'type' : 'gethandle',
+      'data' : undefined
+    }, undefined]);
 
-    var pro = worker.__get__('process');
-    pro.emit('SIGTERM');
-    pro.__getEvents().pop().should.eql({'0':'SIGTERM'});
+    setTimeout(function () {
+      var msg = PROCESS.__getOutMessage();
+      for (var i = 0; i < msg.length; i++) {
+        var s = msg[i].shift();
+        if ('heartbeat' === s.type) {
+          JSON.stringify(s.data).should.eql(JSON.stringify({
+            'hbterm' : 10,
+            'scores' : {},
+            'memory' : {'rss': 2, 'heapTotal': 1, 'heapUsed': 1}
+          }));
+          done();
+          return;
+        }
+      }
+      (true).should.eql(false);
+    }, 15);
+  });
+  /* }}} */
+
+  /* {{{ should_messages_works_fine() */
+  it('should_messages_works_fine', function (_done) {
+    var _me = worker.create({
+      'heartbeat_interval' : 1000,
+      'terminate_timeout'  : 200,
+    }, PROCESS);
+
+    var msg = [];
+    _me.on('message', function (txt, from, pid) {
+      msg.push(JSON.stringify([txt, from, pid]));
+    });
+
+    var done = function () {
+      msg.should.include(JSON.stringify(['Fuck GFW', 'FBX', -1]));
+      _done();
+    };
+
+    PROCESS.emit('message');
+    PROCESS.emit('message', {'data' : 'blabla'});
+    PROCESS.emit('message', {'type' : 'undefined'});
+    PROCESS.emit('message', {'type' : 'hello', 'data' : 'Fuck GFW', 'from' : 'FBX', '_pid' : -1});
+
+    var server = net.createServer(function (socket) {
+      socket.pipe(socket);
+    });
+
+    PROCESS.emit('message', {'type' : 'listen'});
+    PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('a'));
+
+    _me.ready(function (socket, which) {
+      server.emit('connection', socket);
+    });
+
+    done();
   });
   /* }}} */
 

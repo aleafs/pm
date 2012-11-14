@@ -13,7 +13,7 @@ cov:
 	@-rm -rf lib.bak
 	@-mv -f lib lib.bak
 	$(JSCOVERAGE) lib.bak lib
-	$(MOCHA) --reporter html-cov --timeout $(TIMEOUT) $(MOCHA_OPTS) $(TESTS) > ./coverage.html
+	-$(MOCHA) --reporter html-cov --timeout $(TIMEOUT) $(MOCHA_OPTS) $(TESTS) > ./coverage.html
 	@-rm -rf lib && mv -f lib.bak lib
 
 .PHONY: test

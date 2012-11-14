@@ -12,34 +12,41 @@ exports.mockProcess = function () {
    */
   var message = [];
 
+  /**
+   * @ 发出的消息
+   */
+  var msgsout = [];
+
+  /**
+   * @ 被触发的消息
+   */
+  var _events = [];
+
   var Process = function () {
     Emitter.call(this);
   };
   util.inherits(Process, Emitter);
 
-  /**
-   * @ 发出的消息
-   */
-  var msgsout = [];
+  Process.prototype.makesureCleanAllMessage = function () {
+    message = [];
+    msgsout = [];
+    _events = [];
+  };
+
   Process.prototype.send = function (msg, handle) {
     msgsout.push([msg, handle]);
+  };
+
+  Process.prototype.memoryUsage = function () {
+    return {'rss' : 2, 'heapTotal' : 1, 'heapUsed' : 1};
   };
 
   Process.prototype.__getOutMessage = function () {
     return msgsout;
   };
 
-  /**
-   * @ 被触发的消息
-   */
-  var _events = [];
   Process.prototype.__getEvents = function () {
     return _events;
-  };
-
-  Process.prototype.emit = function (evt) {
-    _events.push(arguments);
-    //Emitter.emit.call(this, arguments);
   };
 
   Process.prototype.exit = function (code) {
