@@ -7,17 +7,17 @@ var should = require('should');
 var Common = require(__dirname + '/common.js');
 var worker = require(__dirname + '/../lib/worker.js');
 
-var PROCESS = Common.mockProcess();
+var _Handle = function (name) {
+  return net._createServerHandle(__dirname + '/' + name + '.socket', -1, -1);
+};
 
+var PROCESS;
 beforeEach(function () {
+  PROCESS = Common.mockProcess();
   PROCESS.makesureCleanAllMessage();
   PROCESS.__getOutMessage().should.eql([]);
   PROCESS.__getEvents().should.eql([]);
 });
-
-var _Handle = function (name) {
-  return net._createServerHandle(__dirname + '/' + name + '.socket', -1, -1);
-};
 
 describe('worker process', function () {
 
@@ -26,7 +26,7 @@ describe('worker process', function () {
 
     var _me = worker.create({
       'heartbeat_interval' : 10,
-      'terminate_timeout'  : 200,
+        'terminate_timeout'  : 200,
     }, PROCESS);
 
     _me.broadcast('who', 'test msg');
@@ -64,18 +64,28 @@ describe('worker process', function () {
 
   /* {{{ should_messages_works_fine() */
   it('should_messages_works_fine', function (_done) {
+
     var _me = worker.create({
       'heartbeat_interval' : 1000,
-      'terminate_timeout'  : 200,
+      'terminate_timeout'  : 20,
     }, PROCESS);
 
     var msg = [];
     _me.on('message', function (txt, from, pid) {
       msg.push(JSON.stringify([txt, from, pid]));
     });
+    _me.on('suicide', function (from) {
+      msg.push(JSON.stringify(['suicide', from]));
+    });
+    _me.on('exit', function () {
+      msg.push('exit');
+    });
 
     var done = function () {
       msg.should.include(JSON.stringify(['Fuck GFW', 'FBX', -1]));
+      msg.should.include(JSON.stringify(['suicide', 'SIGTERM']));
+      msg.should.include(JSON.stringify(['suicide', 'message']));
+      msg.should.include('exit');
       _done();
     };
 
@@ -95,7 +105,9 @@ describe('worker process', function () {
       server.emit('connection', socket);
     });
 
-    done();
+    PROCESS.emit('message', {'type' : 'suicide'});
+    PROCESS.emit('SIGTERM');
+    setTimeout(done, 25);
   });
   /* }}} */
 

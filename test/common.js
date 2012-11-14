@@ -51,6 +51,7 @@ exports.mockProcess = function () {
 
   Process.prototype.exit = function (code) {
     _events.push(['exit', code || 0]);
+    this.emit('exit', code);
   };
 
   return new Process();
