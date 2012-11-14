@@ -2,6 +2,7 @@
 
 "use strict";
 
+var http = require('http');
 var net = require('net');
 var should = require('should');
 
@@ -9,18 +10,17 @@ var common = require(__dirname + '/../lib/common.js');
 
 describe('common functions', function () {
 
-  it('should_listen_to_socket', function (done) {
-    var _fn = __dirname + '/a.socket';
+  [33046].forEach(function (idx) {
+    it('should_listen_at_' + idx + '_works_fine', function (done) {
+      var _me = http.createServer(function (req, res) {
+        res.end(req.url);
+      }).listen(common.getHandle(idx));
 
-    var _fn = 33046;
-    var _me = net.createServer(function (c) {
-      console.log('a');
-      c.end();
-      done();
-    }).listen(common.getHandle(_fn));
-
-    var clt = net.connect({'port' : _fn}, function (e) {
-      should.ok(!e);
+      return done();
+      http.get('http:/' + '/localhost:33046/' + idx, function (res) {
+        console.log(res);
+        _me.close(done);
+      });
     });
   });
 
