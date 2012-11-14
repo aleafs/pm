@@ -35,9 +35,10 @@ describe('worker process', function () {
       'data' : {'who' : 'who', 'msg' : 'test msg'}
     }, undefined]);
 
-    _me.ready(function (socket, which) {
-      socket.close();
+    _me.ready(function (client, which) {
+      client.end();
     });
+
     PROCESS.__getOutMessage().pop().should.eql([{
       'type' : 'gethandle',
       'data' : undefined
@@ -106,15 +107,16 @@ describe('worker process', function () {
 
     PROCESS.emit('message', {'type' : 'listen'});
     PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle(sockfn));
-    PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle(sockfn));
 
+    _me.ready();
     _me.once('listen', function (which) {
       /*
-      var clt = net.connect({'path' : sockfn}, function (e) {
+      var clt = net.createConnection({'path' : sockfn}, function (e) {
         console.log(e);
       });
       */
 
+      PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle(sockfn));
       PROCESS.emit('message', {'type' : 'suicide'});
       PROCESS.emit('SIGTERM');
       setTimeout(done, 25);
