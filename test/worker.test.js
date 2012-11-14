@@ -119,14 +119,14 @@ describe('worker process', function () {
       'host' : 'localhost', 'port' : 33046, 'path' : '/aabbce'
     };
 
-    _me.on('listen', function (which) {
+    _me.once('listen', function (which) {
       which.should.eql('a');
 
       var n = 2;
       for (var i = 0; i < n; i++) {
         http.get(options, function (res) {
           res.headers.should.have.property('x-lalla', '/aabbce');
-          //PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('33046'));
+          PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('33046'));
           if (0 === (--n)) {
             PROCESS.emit('message', {'type' : 'suicide'});
             PROCESS.emit('SIGTERM');
