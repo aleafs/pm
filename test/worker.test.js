@@ -3,6 +3,7 @@
 "use strict";
 
 var net = require('net');
+var http = require('http');
 var should = require('should');
 var Common = require(__dirname + '/mock.js');
 var worker = require(__dirname + '/../lib/worker.js');
@@ -97,7 +98,8 @@ describe('worker process', function () {
     PROCESS.emit('message', {'type' : 'undefined'});
     PROCESS.emit('message', {'type' : 'hello', 'data' : 'Fuck GFW', 'from' : 'FBX', '_pid' : -1});
 
-    var http = require('http').createServer(function (req, res) {
+    var _s1 = http.createServer(function (req, res) {
+      res.writeHeader(200, {'x-lalla' : req.url});
       res.end(req.url);
     });
 
@@ -107,7 +109,11 @@ describe('worker process', function () {
     /**
      * @ 默认处理，连接就断掉
      */
-    _me.ready();
+    _me.ready(function (client, which) {
+      if ('a' === which) {
+        _s1.emit('connection', client);
+      }
+    });
 
     var options = {
         'host' : 'localhost', 'port' : 33046, 'path' : '/aabbce'
@@ -115,22 +121,18 @@ describe('worker process', function () {
     _me.on('listen', function (which) {
       which.should.eql('a');
 
-      require('http').get(options, function (res) {
-        console.log(res);
-        PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('33046'));
-        PROCESS.emit('message', {'type' : 'suicide'});
-        PROCESS.emit('SIGTERM');
-        setTimeout(done, 25);
-      });
-
+      var n = 2;
+      for (var i = 0; i < n; i++) {
+        http.get(options, function (res) {
+          res.headers.should.have.property('x-lalla', '/aabbce');
+          if (0 === (--n)) {
+            PROCESS.emit('message', {'type' : 'suicide'});
+            PROCESS.emit('SIGTERM');
+            setTimeout(done, 25);
+          }
+        });
+      }
     });
-
-    /*
-    _me.ready(function (socket, which) {
-      server.emit('connection', socket);
-    });
-    */
-
   });
   /* }}} */
 
