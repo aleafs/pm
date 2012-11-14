@@ -7,9 +7,7 @@ var should = require('should');
 var Common = require(__dirname + '/common.js');
 var worker = require(__dirname + '/../lib/worker.js');
 
-var _Handle = function (fn) {
-  return net._createServerHandle(fn, -1, -1);
-};
+var _Handle = require(__dirname + '/../lib/common.js').getHandle;
 
 var PROCESS;
 beforeEach(function () {
@@ -100,7 +98,6 @@ describe('worker process', function () {
     PROCESS.emit('message', {'type' : 'hello', 'data' : 'Fuck GFW', 'from' : 'FBX', '_pid' : -1});
 
     var sockfn = __dirname + '/a.socket';
-
     var server = net.createServer(function (socket) {
       socket.pipe(socket);
     });
@@ -108,8 +105,12 @@ describe('worker process', function () {
     PROCESS.emit('message', {'type' : 'listen'});
     PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle(sockfn));
 
+    /**
+     * @ 默认处理，连接就断掉
+     */
     _me.ready();
     _me.once('listen', function (which) {
+      which.should.eql('a');
       /*
       var clt = net.createConnection({'path' : sockfn}, function (e) {
         console.log(e);
