@@ -7,8 +7,8 @@ var should = require('should');
 var Common = require(__dirname + '/common.js');
 var worker = require(__dirname + '/../lib/worker.js');
 
-var _Handle = function (name) {
-  return net._createServerHandle(__dirname + '/' + name + '.socket', -1, -1);
+var _Handle = function (fn) {
+  return net._createServerHandle(fn, -1, -1);
 };
 
 var PROCESS;
@@ -80,11 +80,15 @@ describe('worker process', function () {
     _me.on('exit', function () {
       msg.push('exit');
     });
+    _me.on('listen', function (which) {
+      msg.push(JSON.stringify(['listen', which]));
+    });
 
     var done = function () {
       msg.should.include(JSON.stringify(['Fuck GFW', 'FBX', -1]));
       msg.should.include(JSON.stringify(['suicide', 'SIGTERM']));
       msg.should.include(JSON.stringify(['suicide', 'message']));
+      msg.should.include(JSON.stringify(['listen', 'a']));
       msg.should.include('exit');
       _done();
     };
@@ -94,20 +98,34 @@ describe('worker process', function () {
     PROCESS.emit('message', {'type' : 'undefined'});
     PROCESS.emit('message', {'type' : 'hello', 'data' : 'Fuck GFW', 'from' : 'FBX', '_pid' : -1});
 
+    var sockfn = __dirname + '/a.socket';
+
     var server = net.createServer(function (socket) {
       socket.pipe(socket);
     });
 
     PROCESS.emit('message', {'type' : 'listen'});
-    PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('a'));
+    PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle(sockfn));
+    PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle(sockfn));
 
+    _me.once('listen', function (which) {
+      /*
+      var clt = net.connect({'path' : sockfn}, function (e) {
+        console.log(e);
+      });
+      */
+
+      PROCESS.emit('message', {'type' : 'suicide'});
+      PROCESS.emit('SIGTERM');
+      setTimeout(done, 25);
+    });
+
+    /*
     _me.ready(function (socket, which) {
       server.emit('connection', socket);
     });
+    */
 
-    PROCESS.emit('message', {'type' : 'suicide'});
-    PROCESS.emit('SIGTERM');
-    setTimeout(done, 25);
   });
   /* }}} */
 
