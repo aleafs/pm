@@ -10,16 +10,25 @@ var common = require(__dirname + '/../lib/common.js');
 
 describe('common functions', function () {
 
-  [33046].forEach(function (idx) {
+  [33046, /*__dirname + '/a.socket'*/].forEach(function (idx) {
     it('should_listen_at_' + idx + '_works_fine', function (done) {
       var _me = http.createServer(function (req, res) {
         res.end(req.url);
-      }).listen(common.getHandle(idx));
+      }).listen(common.getHandle(idx), function () {
 
-      return done();
-      http.get('http:/' + '/localhost:33046/' + idx, function (res) {
-        console.log(res);
-        _me.close(done);
+        var options = {
+          'path' : '/' + idx,
+        };
+        if ('number' === (typeof idx) || idx.match(/^\d+$/)) {
+          options.host = 'localhost';
+          options.port = idx;
+        } else {
+          options.socketPath = idx;
+        }
+        http.get(options, function (res) {
+          _me.close();
+          done();
+        });
       });
     });
   });

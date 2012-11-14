@@ -97,30 +97,32 @@ describe('worker process', function () {
     PROCESS.emit('message', {'type' : 'undefined'});
     PROCESS.emit('message', {'type' : 'hello', 'data' : 'Fuck GFW', 'from' : 'FBX', '_pid' : -1});
 
-    var sockfn = __dirname + '/a.socket';
-    var server = net.createServer(function (socket) {
-      socket.pipe(socket);
+    var http = require('http').createServer(function (req, res) {
+      res.end(req.url);
     });
 
     PROCESS.emit('message', {'type' : 'listen'});
-    PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle(sockfn));
+    PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('33046'));
 
     /**
      * @ 默认处理，连接就断掉
      */
     _me.ready();
-    _me.once('listen', function (which) {
-      which.should.eql('a');
-      /*
-      var clt = net.createConnection({'path' : sockfn}, function (e) {
-        console.log(e);
-      });
-      */
 
-      PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle(sockfn));
-      PROCESS.emit('message', {'type' : 'suicide'});
-      PROCESS.emit('SIGTERM');
-      setTimeout(done, 25);
+    var options = {
+        'host' : 'localhost', 'port' : 33046, 'path' : '/aabbce'
+    };
+    _me.on('listen', function (which) {
+      which.should.eql('a');
+
+      require('http').get(options, function (res) {
+        console.log(res);
+        PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('33046'));
+        PROCESS.emit('message', {'type' : 'suicide'});
+        PROCESS.emit('SIGTERM');
+        setTimeout(done, 25);
+      });
+
     });
 
     /*
