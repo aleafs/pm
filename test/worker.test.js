@@ -4,7 +4,7 @@
 
 var net = require('net');
 var should = require('should');
-var Common = require(__dirname + '/common.js');
+var Common = require(__dirname + '/mock.js');
 var worker = require(__dirname + '/../lib/worker.js');
 
 var _Handle = require(__dirname + '/../lib/common.js').getHandle;
