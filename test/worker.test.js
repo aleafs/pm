@@ -109,15 +109,16 @@ describe('worker process', function () {
     /**
      * @ 默认处理，连接就断掉
      */
-    _me.ready(function (client, which) {
+    _me.ready(function (socket, which) {
       if ('a' === which) {
-        _s1.emit('connection', client);
+        _s1.emit('connection', socket);
       }
     });
 
     var options = {
-        'host' : 'localhost', 'port' : 33046, 'path' : '/aabbce'
+      'host' : 'localhost', 'port' : 33046, 'path' : '/aabbce'
     };
+
     _me.on('listen', function (which) {
       which.should.eql('a');
 
@@ -125,7 +126,7 @@ describe('worker process', function () {
       for (var i = 0; i < n; i++) {
         http.get(options, function (res) {
           res.headers.should.have.property('x-lalla', '/aabbce');
-          PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('33046'));
+          //PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('33046'));
           if (0 === (--n)) {
             PROCESS.emit('message', {'type' : 'suicide'});
             PROCESS.emit('SIGTERM');
