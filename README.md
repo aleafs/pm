@@ -20,19 +20,24 @@ $ npm install pm@2.0.0-alpha
 ```bash
 
 $ siege -b -c100 -t 60S http://172.0.0.2:33749/
-
 ```
 
 * QPS (only one child, http server, response req.url) (node0.6.17):
-+-------+----------+-----------+
-| CASE  | closed   | keepalive |
-|-------+----------+-----------+
-| pm2.0 |   5600   |   10553   |
-|-------+----------+------------
-| pm1.0 |   5231   |   10388   |
-|-------+----------+------------
-| node  |   5481   |   10126   |
-+-------+----------+------------
+
+<table>
+  <tr>
+    <th>CASE</th><th>Closed</th><th>KeepAlive</th>
+  </tr>
+  <tr>
+    <td>pm2.0</td><td>5600</td><td>10553</td>
+  </tr>
+  <tr>
+    <td>pm1.0</td><td>5231</td><td>10388</td>
+  </tr>
+  <tr>
+    <td>node</td><td>5481</td><td>10126</td>
+  </tr>
+</table>
 
 ## Usage
 
