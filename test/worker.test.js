@@ -12,6 +12,8 @@ var _Handle = require(__dirname + '/../lib/common.js').getHandle;
 
 var PROCESS;
 beforeEach(function () {
+
+  Common.resetAllStatic();
   PROCESS = Common.mockProcess();
   PROCESS.makesureCleanAllMessage();
   PROCESS.__getOutMessage().should.eql([]);

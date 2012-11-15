@@ -10,6 +10,7 @@ var master = rewire(__dirname + '/../lib/master.js');
 var PROCESS;
 var ___messages = [];
 beforeEach(function () {
+  common.resetAllStatic();
   PROCESS = common.mockProcess();
   PROCESS.makesureCleanAllMessage();
   PROCESS.__getOutMessage().should.eql([]);

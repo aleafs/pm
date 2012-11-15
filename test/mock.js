@@ -3,7 +3,16 @@
 "use strict";
 
 var util = require('util');
+var path = require('path');
 var Emitter = require('events').EventEmitter;
+
+var _PIDCOUNTER = 1;
+var globalMessage = [];
+
+exports.resetAllStatic = function () {
+  _PIDCOUNTER = 1;
+  globalMessage = [];
+};
 
 exports.mockProcess = function () {
 
@@ -19,13 +28,13 @@ exports.mockProcess = function () {
 
   var Process = function () {
     Emitter.call(this);
-    this.env  = {};
-    this.pid  = 1;
+    this.env  = {'test-env' : 'lalal'};
+    this.pid  = 0;
   };
   util.inherits(Process, Emitter);
 
   Process.prototype.cwd = function () {
-    return __dirname + '/..';
+    return path.normalize(__dirname);
   };
 
   Process.prototype.makesureCleanAllMessage = function () {
@@ -67,6 +76,7 @@ exports.mockFork = function () {
 
   var Sub = function () {
     Emitter.call(this);
+    this.pid = _PIDCOUNTER++;
   };
   util.inherits(Sub, Emitter);
 
@@ -81,10 +91,15 @@ exports.mockFork = function () {
 
   Sub.prototype.send = function (msg, handle) {
     msgsout.push([msg, handle]);
+    globalMessage.push(JSON.stringify([this.pid, msg, handle]));
   };
 
   Sub.prototype.__getOutMessage = function () {
     return msgsout;
+  };
+
+  Sub.prototype.__getGlobalMessage = function () {
+    return globalMessage;
   };
 
   return new Sub();
