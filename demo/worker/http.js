@@ -30,7 +30,7 @@ var s2 = require('http').createServer(function (req, res) {
   res.end(JSON.stringify({
     'act' : url,
     'url' : req.url,
-  });
+  }));
 });
 
 worker.ready(function(socket, which) {
