@@ -27,7 +27,7 @@ describe('worker process', function () {
 
     var _me = worker.create({
       'heartbeat_interval' : 10,
-        'terminate_timeout'  : 200,
+      'terminate_timeout'  : 200,
     }, PROCESS);
 
     _me.broadcast('who', 'test msg');
@@ -136,6 +136,28 @@ describe('worker process', function () {
           }
         });
       }
+    });
+  });
+  /* }}} */
+
+  /* {{{ should_default_onconnect_works_fine() */
+  it('should_default_onconnect_works_fine', function (done) {
+    var _me = worker.create({
+      'heartbeat_interval' : 1000,
+      'terminate_timeout'  : 20,
+    }, PROCESS);
+
+    var _fn = __dirname + '/a.socket';
+    PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle(_fn));
+    _me.ready();
+
+    var clt = net.connect(_fn, function () {
+    });
+    clt.on('data', function (d) {
+      (true).should.eql(false);
+    });
+    clt.on('end', function () {
+      done();
     });
   });
   /* }}} */
