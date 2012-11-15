@@ -31,7 +31,7 @@ describe('child manager', function () {
   /* {{{ should_public_method_works_fine() */
   it('should_public_method_works_fine', function (_done) {
     var _me = Child.create(['filename.js', 'b'], {
-      'listen' : __dirname + '/a.socket,,0', 'children' : 3,
+      'listen' : __dirname + '/a.socket,,33047', 'children' : 3,
     });
 
     var _messages = [];
@@ -104,10 +104,13 @@ describe('child manager', function () {
     one.emit('message', {'type' : 'broadcast', 'data' : {'who' : 'FBX'}});
     one.emit('message', {'type' : 'broadcast', 'data' : {'who' : 'FBX', 'msg' : 'fuck'}});
 
+    one.__getOutMessage().pop();
+
     /**
      * @ 请求句柄
      */
     one.emit('message', {'type' : 'ready'});
+    one.__getOutMessage().pop()[0].should.eql({'type' : 'listen', 'data' : 33047});
 
     setTimeout(function () {
       Object.keys(_me.dielist).should.eql(['2', '3']);

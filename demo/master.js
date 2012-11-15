@@ -8,10 +8,9 @@ var app = require(__dirname + '/../').createMaster({
 /**
  * daemon process, log analysist or something else
  */
-if (0)
 app.register('daemon', __dirname + '/worker/daemon.js', {
   'trace_gc': true,
-  'children': 1,
+  'children': 2,
 });
 
 /**
@@ -19,6 +18,7 @@ app.register('daemon', __dirname + '/worker/daemon.js', {
  */
 app.register('http', __dirname + '/worker/http.js', {
   'listen' : [ 33749, __dirname + '/http.socket' ],
+  'children' : 1
 });
 
 app.on('giveup', function (name, fatals, pause) {
