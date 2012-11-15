@@ -94,6 +94,13 @@ exports.mockFork = function () {
     globalMessage.push(JSON.stringify([this.pid, msg, handle]));
   };
 
+  Sub.prototype.kill = function (signal) {
+    var _self = this;
+    setTimeout(function () {
+      _self.emit('exit', 0, signal);
+    }, 1);
+  };
+
   Sub.prototype.__getOutMessage = function () {
     return msgsout;
   };
