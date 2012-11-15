@@ -31,6 +31,7 @@ app.register('group1', __dirname + '/http.js', {
 app.on('giveup', function (name, num, pause) {
   // YOU SHOULD ALERT HERE!
 });
+app.dispatch();
 
 ```
 
