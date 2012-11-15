@@ -124,7 +124,7 @@ exports.mockChild = function () {
    */
   var _messages = [];
 
-  ['start', 'stop', 'reload'].forEach(function (i) {
+  ['start', 'stop', 'reload', 'broadcast'].forEach(function (i) {
     Child.prototype[i] = function () {
       _messages.push([i, arguments]);
     };
