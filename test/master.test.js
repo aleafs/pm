@@ -75,7 +75,7 @@ describe('master', function () {
     /**
      * @ 实际上需要remove掉这个listener
      */
-    //_p1.emit('fork', 1);
+    _p1.emit('fork', 1);
     _p2.emit('fork', 1);
     _p2.emit('exit', 1, 23, 'SIGTERM');
     _p2.emit('giveup', 10, 600);
