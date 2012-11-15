@@ -39,7 +39,7 @@ describe('worker process', function () {
     });
 
     PROCESS.__getOutMessage().pop().should.eql([{
-      'type' : 'gethandle',
+      'type' : 'ready',
       'data' : undefined
     }, undefined]);
 

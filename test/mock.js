@@ -8,11 +8,6 @@ var Emitter = require('events').EventEmitter;
 exports.mockProcess = function () {
 
   /**
-   * @ 模拟收到的消息
-   */
-  var message = [];
-
-  /**
    * @ 发出的消息
    */
   var msgsout = [];
@@ -34,7 +29,6 @@ exports.mockProcess = function () {
   };
 
   Process.prototype.makesureCleanAllMessage = function () {
-    message = [];
     msgsout = [];
     _events = [];
   };
@@ -67,20 +61,31 @@ exports.mockProcess = function () {
   return new Process();
 };
 
-exports.mockConsole = function () {
+exports.mockFork = function () {
 
-  var message = [];
+  var _arguments = arguments;
 
-  var _me = {};
-  ['log', 'error'].forEach(function (i) {
-    _me[i] = function (msg) {
-      message.push([i, msg]);
-    };
-  });
+  var Sub = function () {
+    Emitter.call(this);
+  };
+  util.inherits(Sub, Emitter);
 
-  _me.__getMessages = function () {
-    return message;
+  Sub.prototype.__getArguments = function () {
+    return _arguments;
   };
 
-  return _me;
+  /**
+   * @ 发出的消息
+   */
+  var msgsout = [];
+
+  Sub.prototype.send = function (msg, handle) {
+    msgsout.push([msg, handle]);
+  };
+
+  Sub.prototype.__getOutMessage = function () {
+    return msgsout;
+  };
+
+  return new Sub();
 };
