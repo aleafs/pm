@@ -6,13 +6,13 @@
 
 * 基于 master + worker 模式，master负责进程管理，worker 处理业务逻辑，有效利用现代服务器的多CPU;
 * 同一 master 可管理多种类型的worker, 并且支持在不同类型的 worker 之间进行轻量的消息传递;
-* 同一类型的 worker ，在 master 中进行负载均衡和健康检查，尤其对于类似死循环导致的“假死”情况有很好的识别;
+* 同一类型的 worker ，对于TCP请求，采用抢占式的方式进行负载均衡；
 * 平滑退出和 不退出前提下的 worker 进程重载 (reload).
 
 ## Install
 
 ```bash
-$ npm install pm
+$ npm install pm@2.0.0-alpha
 ```
 
 ## Usage
@@ -26,6 +26,10 @@ var app = require('pm').createMaster({
 
 app.register('group1', __dirname + '/http.js', {
  'listen' : [8080, 8081]
+});
+
+app.on('giveup', function (name, num, pause) {
+  // YOU SHOULD ALERT HERE!
 });
 
 ```
@@ -51,7 +55,7 @@ unit test
 $ make test
 ```
 
-jscoverage: [**92%**](http://fengmk2.github.com/coverage/node-cluster.html)
+jscoverage: [**99%**](http://aleafs.github.com/coverage/pm2.html)
 
 ```bash
 $ make cov
@@ -68,12 +72,7 @@ Below is the output from `git-summary`
  commits: 239
  files  : 23
  authors: 
-   199	aleafs                  83.3%
-    23	fengmk2                 9.6%
-     9	Jackson Tian            3.8%
-     6	aleafs zhang            2.5%
-     1	Will Wen Gunn           0.4%
-     1	pengchun                0.4%
+   43	aleafs                  100.0%
 
 ```
 

@@ -56,6 +56,7 @@ describe('master', function () {
   });
   /* }}} */
 
+  /* {{{ should_public_api_works_fine() */
   it('should_public_api_works_fine', function (done) {
     var _me = master.create({'terminate_timeout' : 10});
 
@@ -102,5 +103,6 @@ describe('master', function () {
       done();
     }, 20);
   });
+  /* }}} */
 
 });
