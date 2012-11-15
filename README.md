@@ -15,6 +15,25 @@
 $ npm install pm@2.0.0-alpha
 ```
 
+## Benchmark
+
+```bash
+
+$ siege -b -c100 -t 60S http://172.0.0.2:33749/
+
+```
+
+* QPS (only one child, http server, response req.url) (node0.6.17):
++-------+----------+-----------+
+| CASE  | closed   | keepalive |
+|-------+----------+-----------+
+| pm2.0 |   5600   |   10553   |
+|-------+----------+------------
+| pm1.0 |   5231   |   10388   |
+|-------+----------+------------
+| node  |   5481   |   10126   |
++-------+----------+------------
+
 ## Usage
 
 * in `master.js`, run as master:
