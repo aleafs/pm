@@ -28,6 +28,7 @@ beforeEach(function () {
 
 describe('child manager', function () {
 
+  /* {{{ should_public_method_works_fine() */
   it('should_public_method_works_fine', function (_done) {
     var _me = Child.create(['filename.js', 'b'], {
       'listen' : __dirname + '/a.socket,,0', 'children' : 3,
@@ -70,6 +71,7 @@ describe('child manager', function () {
     Object.keys(_me.pstatus).should.eql(['1', '2', '3']);
 
     _me.reload();
+    _me.start();
     Object.keys(_me.dielist).should.eql(['1', '2', '3']);
     Object.keys(_me.pstatus).should.eql(['1', '2', '3', '4', '5', '6']);
 
@@ -108,12 +110,71 @@ describe('child manager', function () {
     one.emit('message', {'type' : 'ready'});
 
     setTimeout(function () {
-      //Object.keys(_me.dielist).should.eql(['2', '3']);
+      Object.keys(_me.dielist).should.eql(['2', '3']);
+      Object.keys(_me.pstatus).should.eql(['2', '3', '4', '5', '6']);
       _me.stop();
       _me.running.should.eql(0);
       done();
     }, 10);
   });
+  /* }}} */
+
+  /**
+   * XXX: 这个case逻辑上还有点问题
+   */
+  /* {{{ should_max_fatals_works_fine() */
+  it('should_max_fatals_works_fine', function (done) {
+
+    common.resetAllStatic();
+
+    var _me = Child.create(['a'], {
+      'listen' : null, 'max_fatal_restart' : 2, 'pause_after_fatal' : 10
+    });
+
+    var _messages = [];
+    _me.on('giveup', function (n, p) {
+      n.should.eql(2);
+      p.should.eql(10);
+      _messages.push(['giveup', n, p]);
+    });
+    _me.on('fork', function (pid) {
+      _messages.push(['fork', pid]);
+    });
+
+    var one = _me._fork();
+    _messages.should.eql([['fork', 1]]);
+
+    _me.start();
+
+    var cpu = require('os').cpus().length;
+    Object.keys(_me.pstatus).should.have.property('length', cpu);
+
+    /**
+     * exit cases:
+     * 0, sigterm : [-] fork 0
+     * 0, sigkill : [!] fork 1
+     * 1, sigterm : [!] fork 2
+     * 1, sigkill : [!] pause
+     */
+    for (var i = 0; i < 2; i++) {
+      ['SIGTERM', 'SIGKILL'].forEach(function (s) {
+        one.emit('exit', i, s);
+      });
+    }
+
+    var expects = [];
+    for (var i = 0; i < cpu; i++) {
+      expects.push(['fork', 1 + i]);
+    }
+
+    expects.push(['fork', i++]);
+
+    setTimeout(function () {
+      //_messages.should.eql(expects);
+      done();
+    }, 50);
+  });
+  /* }}} */
 
 });
 
