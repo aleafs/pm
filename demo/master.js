@@ -6,6 +6,13 @@ var app = require(__dirname + '/../').createMaster({
 });
 
 /**
+ * @ test fork error protect
+ */
+app.register('error', __dirname + '/worker/exception.js', {
+  'children' : 1
+});
+
+/**
  * daemon process, log analysist or something else
  */
 app.register('daemon', __dirname + '/worker/daemon.js', {
@@ -22,7 +29,7 @@ app.register('http', __dirname + '/worker/http.js', {
 });
 
 app.on('giveup', function (name, fatals, pause) {
-  console.log('Master giveup to restart "%s" process after %d times.', name, fatals);
+  console.log('Master giveup to restart "%s" process after %d times. pm will try after %d ms.', name, fatals, pause);
 });
 
 app.dispatch();
