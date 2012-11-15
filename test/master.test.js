@@ -8,7 +8,6 @@ var common = require(__dirname + '/mock.js');
 var master = rewire(__dirname + '/../lib/master.js');
 
 var PROCESS;
-var ___messages = [];
 beforeEach(function () {
   common.resetAllStatic();
   PROCESS = common.mockProcess();
@@ -16,19 +15,18 @@ beforeEach(function () {
   PROCESS.__getOutMessage().should.eql([]);
   PROCESS.__getEvents().should.eql([]);
 
-  ___messages = [];
   master.__set__({
     'PROCESS' : PROCESS,
-    'fork'  : function () {
-      ___messages.push(arguments);
-    },
+    'CreateChild' : common.mockChild,
   });
 });
 
 describe('master', function () {
 
-  it('', function () {
+  it('should_public_api_works_fine', function () {
     var _me = master.create();
+
+    _me.register('A1', 'a1.js');
     _me.shutdown();
     PROCESS.emit('SIGUSR1');
   });

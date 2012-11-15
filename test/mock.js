@@ -111,3 +111,29 @@ exports.mockFork = function () {
 
   return new Sub();
 };
+
+exports.mockChild = function () {
+
+  var Child = function () {
+    Emitter.call(this);
+  };
+  util.inherits(Child, Emitter);
+
+  /**
+   * @ 收到的消息
+   */
+  var _messages = [];
+
+  ['start', 'stop', 'reload'].forEach(function (i) {
+    Child.prototype[i] = function () {
+      _messages.push([i, arguments]);
+    };
+  });
+
+  Child.prototype.__getMessages = function () {
+    return _messages;
+  };
+
+  return new Child();
+};
+
