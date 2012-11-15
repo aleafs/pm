@@ -61,7 +61,7 @@ describe('master', function () {
     var _me = master.create({'terminate_timeout' : 10});
 
     var _messages = [];
-    ['fork', 'quit', 'giveup'].forEach(function (i) {
+    ['fork', 'quit', 'giveup', 'signal'].forEach(function (i) {
       _me.on(i, function () {
         _messages.push([i, arguments]);
       });
@@ -88,6 +88,7 @@ describe('master', function () {
     _me.shutdown();
     _p2.__getMessages().pop().should.eql(['stop', {'0' : 'SIGTERM'}]);
 
+    PROCESS.emit('SIGHUB');
     PROCESS.emit('SIGUSR1');
     _p2.__getMessages().pop().should.eql(['reload', {}]);
 
@@ -98,7 +99,10 @@ describe('master', function () {
       _messages.should.eql([
         ['fork', {'0':'a1','1':1}],
         ['quit', {'0':'a1','1':1,'2':23,'3':'SIGTERM'}],
-        ['giveup', {'0':'a1','1':10,'2':600}]
+        ['giveup', {'0':'a1','1':10,'2':600}],
+        ['signal', {'0':1, '1':'SIGHUB'}],
+        ['signal', {'0':30,'1':'SIGUSR1'}],
+        ['signal', {'0':15,'1':'SIGTERM'}],
         ]);
       done();
     }, 20);
