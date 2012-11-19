@@ -5,6 +5,10 @@ var app = require(__dirname + '/../').createMaster({
   'statusfile' : __dirname + '/status.log',
 });
 
+app.on('giveup', function (name, fatals, pause) {
+  console.log('Master giveup to restart "%s" process after %d times. pm will try after %d ms.', name, fatals, pause);
+});
+
 /**
  * @ test fork error protect
  */
@@ -26,10 +30,6 @@ app.register('daemon', __dirname + '/worker/daemon.js', {
 app.register('http', __dirname + '/worker/http.js', {
   'listen' : [ 33749, __dirname + '/http.socket' ],
   'children' : 1
-});
-
-app.on('giveup', function (name, fatals, pause) {
-  console.log('Master giveup to restart "%s" process after %d times. pm will try after %d ms.', name, fatals, pause);
 });
 
 app.dispatch();
