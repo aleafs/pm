@@ -1,5 +1,7 @@
 [![Build Status](https://secure.travis-ci.org/aleafs/pm.png?branch=pm2.0)](http://travis-ci.org/aleafs/pm)
 
+jscoverage: [**99%**](http://aleafs.github.com/coverage/pm2.html)
+
 ## About
 
 `pm` 是一个轻量级的Node.js多进程管理器，基于之前的`node-cluster`重构而来，在淘宝内部的生产系统中得到了广泛的应用.
@@ -74,20 +76,6 @@ var http = require('http').createServer(function (req, res) {
 require('pm').createWorker().ready(function (socket, port) {
  http.emit('connection', socket);
 });
-```
-
-## Test
-
-unit test
-
-```bash
-$ make test
-```
-
-jscoverage: [**99%**](http://aleafs.github.com/coverage/pm2.html)
-
-```bash
-$ make cov
 ```
 
 ## Contributors
