@@ -19,7 +19,7 @@ jscoverage: [**100%**](http://aleafs.github.com/coverage/pm2.html)
 ## Install
 
 ```bash
-$ npm install pm@2.0.0-alpha
+$ npm install pm
 ```
 
 ## Benchmark
