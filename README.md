@@ -9,6 +9,11 @@
 * 同一类型的 worker ，对于TCP请求，采用抢占式的方式进行负载均衡；
 * 平滑退出和 不退出前提下的 worker 进程重载 (reload).
 
+## Api
+
+* Visit the [wiki page](wiki) to get more infomation about `pm`.
+* Alse, we have demo scripts in the code directory [demo](demo).
+
 ## Install
 
 ```bash
@@ -70,7 +75,6 @@ require('pm').createWorker().ready(function (socket, port) {
  http.emit('connection', socket);
 });
 ```
-* 在 `demo` 目录下你能看到更多的示例代码.
 
 ## Test
 
