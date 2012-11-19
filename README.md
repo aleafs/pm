@@ -14,7 +14,7 @@ jscoverage: [**100%**](http://aleafs.github.com/coverage/pm2.html)
 ## Api
 
 * Visit the [wiki page](https://github.com/aleafs/pm/wiki) to get more infomation about `pm`.
-* Alse, we have demo scripts in the code directory [demo](demo).
+* Also, we supply demo scripts in the code directory [demo](demo).
 
 ## Install
 
