@@ -9,26 +9,27 @@ var common = require(__dirname + '/mock.js');
 var master = rewire(__dirname + '/../lib/master.js');
 
 var PROCESS;
-beforeEach(function (done) {
-  common.resetAllStatic();
-  PROCESS = common.mockProcess();
-  PROCESS.makesureCleanAllMessage();
-  PROCESS.__getOutMessage().should.eql([]);
-  PROCESS.__getEvents().should.eql([]);
-
-  master.__set__({
-    'PROCESS' : PROCESS,
-    'CreateChild' : common.mockChild,
-  });
-
-  var cmd = require('util').format('rm -rf "%s/tmp"', __dirname);
-  require('child_process').exec(cmd, function (e) {
-    should.ok(!e);
-    done();
-  });
-});
 
 describe('master', function () {
+
+  beforeEach(function (done) {
+    common.resetAllStatic();
+    PROCESS = common.mockProcess();
+    PROCESS.makesureCleanAllMessage();
+    PROCESS.__getOutMessage().should.eql([]);
+    PROCESS.__getEvents().should.eql([]);
+
+    master.__set__({
+      'PROCESS' : PROCESS,
+      'CreateChild' : common.mockChild,
+    });
+
+    var cmd = require('util').format('rm -rf "%s/tmp"', __dirname);
+    require('child_process').exec(cmd, function (e) {
+      should.ok(!e);
+      done();
+    });
+  });
 
   var pidfile = __dirname + '/tmp/a.pid';
 
@@ -106,6 +107,27 @@ describe('master', function () {
         ]);
       done();
     }, 20);
+  });
+  /* }}} */
+
+  /* {{{ should_statusfile_works_fine() */
+  it('should_statusfile_works_fine', function (done) {
+    var _fn = __dirname + '/tmp/status.log';
+    var _me = master.create({
+      'statusfile' : _fn, 'statusflush_interval' : 20
+    });
+    _me.register('group1', './group1.js');
+    _me.register('group2', './group1.js');
+    setTimeout(function () {
+      fs.readFile(_fn, 'utf8', function (e,d) {
+        should.ok(!e);
+        var d = d.split('\n');
+        d.length.should.above(4);
+        d.should.include(process.pid + ':\tgroup1\tpid\t{"k1":"aaa"}');
+        d.should.include(process.pid + ':\tgroup2\tpid\t{"k1":"aaa"}');
+        done();
+      });
+    }, 50);
   });
   /* }}} */
 

@@ -116,6 +116,9 @@ exports.mockChild = function () {
 
   var Child = function () {
     Emitter.call(this);
+    this.pstatus = {
+      'pid' : {'k1' : 'aaa'}
+    };
   };
   util.inherits(Child, Emitter);
 

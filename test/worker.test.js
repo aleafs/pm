@@ -11,13 +11,14 @@ var worker = require(__dirname + '/../lib/worker.js');
 var _Handle = require(__dirname + '/../lib/common.js').getHandle;
 
 var PROCESS;
-beforeEach(function () {
+beforeEach(function (done) {
 
   Common.resetAllStatic();
   PROCESS = Common.mockProcess();
   PROCESS.makesureCleanAllMessage();
   PROCESS.__getOutMessage().should.eql([]);
   PROCESS.__getEvents().should.eql([]);
+  done();
 });
 
 describe('worker process', function () {

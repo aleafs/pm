@@ -1,6 +1,6 @@
 [![Build Status](https://secure.travis-ci.org/aleafs/pm.png?branch=pm2.0)](http://travis-ci.org/aleafs/pm)
 
-jscoverage: [**99%**](http://aleafs.github.com/coverage/pm2.html)
+jscoverage: [**100%**](http://aleafs.github.com/coverage/pm2.html)
 
 ## About
 
