@@ -118,10 +118,36 @@ describe('child manager', function () {
     one.emit('message', {'type' : 'ready'});
     setTimeout(function () {
       Object.keys(_me.dielist).length.should.below(2);
-      Object.keys(_me.pstatus).should.eql(['2', '3', '4', '5', '6']);
+      Object.keys(_me.pstatus).should.eql(['4', '5', '6']);
       _me.stop();
       _me.running.should.eql(0);
       done();
+    }, 10);
+  });
+  /* }}} */
+
+  /* {{{ should_killall_child_when_exit() */
+  it('should_killall_child_when_exit', function (done) {
+    var _me = Child.create(['filename.js', 'b'], {
+      'children' : 3,
+    });
+
+    common.resetAllStatic();
+
+    _me.start();
+    _me.reload();
+    Object.keys(_me.dielist).should.eql(['1','2','3']);
+
+    var one = _me._fork();
+    one.emit('ready');
+    setTimeout(function () {
+      Object.keys(_me.dielist).should.eql(['1','2','3']);
+      _me.stop();
+
+      setTimeout(function () {
+        Object.keys(_me.dielist).should.eql([]);
+        done();
+      }, 10);
     }, 10);
   });
   /* }}} */
