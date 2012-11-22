@@ -112,8 +112,12 @@ describe('child manager', function () {
     one.emit('message', {'type' : 'ready'});
     one.__getOutMessage().pop()[0].should.eql({'type' : 'listen', 'data' : 33047});
 
+    /**
+     * @ 模拟两个进程ready，dielist应该至少杀掉2个
+     */
+    one.emit('message', {'type' : 'ready'});
     setTimeout(function () {
-      Object.keys(_me.dielist).should.eql(['2', '3']);
+      Object.keys(_me.dielist).length.should.below(2);
       Object.keys(_me.pstatus).should.eql(['2', '3', '4', '5', '6']);
       _me.stop();
       _me.running.should.eql(0);
