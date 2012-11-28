@@ -40,3 +40,8 @@ worker.ready(function(socket, which) {
     s2.emit('connection', socket);
   }
 });
+
+worker.on('suicide', function (by) {
+  console.log('suicide by ' + by);
+});
+
