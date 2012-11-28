@@ -161,7 +161,8 @@ describe('child manager', function () {
     common.resetAllStatic();
 
     var _me = Child.create(['a'], {
-      'listen' : null, 'max_fatal_restart' : 2, 'pause_after_fatal' : 10
+      'listen' : null, 'max_fatal_restart' : 2, 'pause_after_fatal' : 10,
+      'children' : 0
     });
 
     var _messages = [];

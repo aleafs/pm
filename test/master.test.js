@@ -96,6 +96,9 @@ describe('master', function () {
     PROCESS.emit('SIGTERM');
     _p2.__getMessages().pop().should.eql(['stop', {'0' : 'SIGTERM'}]);
 
+    PROCESS.emit('SIGINT');
+    _p2.__getMessages().pop().should.eql(['stop', {'0' : 'SIGTERM'}]);
+
     setTimeout(function () {
       _messages.should.eql([
         ['fork', {'0':'a1','1':1}],
@@ -104,6 +107,7 @@ describe('master', function () {
         ['signal', {'0':1, '1':'SIGHUB'}],
         ['signal', {'0':30,'1':'SIGUSR1'}],
         ['signal', {'0':15,'1':'SIGTERM'}],
+        ['signal', {'0':2, '1':'SIGINT'}],
         ]);
       done();
     }, 20);
