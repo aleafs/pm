@@ -180,7 +180,7 @@ describe('child manager', function () {
 
     _me.start();
 
-    var cpu = require(__dirname + '/../lib/os.js').cpus().length;
+    var cpu = require(__dirname + '/../lib/os.js').cpusnum();
     Object.keys(_me.pstatus).should.have.property('length', cpu);
 
     /**
