@@ -86,10 +86,10 @@ Below is the output from `git-summary`
 
 ```
  project: pm
- commits: 239
+ commits: 78
  files  : 23
  authors: 
-   43	aleafs                  100.0%
+   78	aleafs                  100.0%
 
 ```
 
