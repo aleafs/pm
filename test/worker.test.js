@@ -163,4 +163,35 @@ describe('worker process', function () {
   });
   /* }}} */
 
+  /* {{{ should_serialStart_works_fine() */
+  it('should_serialStart_works_fine', function (_done) {
+
+    var _me = worker.create({
+      'heartbeat_interval' : 1000,
+      'terminate_timeout'  : 20,
+    }, PROCESS);
+
+    var test = '';
+    var get_token_timeout = 100;
+
+    _me.serialStart(function(done){      
+      test = 'child start!';
+      done();
+    }, get_token_timeout);
+
+    PROCESS.emit('message', {'token': -1});
+
+    setTimeout(function(){
+      test.should.eql('');
+
+      PROCESS.emit('message', {'token': 1});
+
+      setTimeout(function(){
+        test.should.eql('child start!');
+        _done();
+      }, 10);
+    }, get_token_timeout + 1);
+  });
+  /* }}} */
+
 });

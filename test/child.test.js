@@ -210,5 +210,57 @@ describe('child manager', function () {
   });
   /* }}} */
 
+  /* {{{ should_serial_mode_works_fine() */
+  it('should_serial_mode_works_fine', function (done) {
+    var _me = Child.create(['filename.js', 'b'], {
+      'children' : 3,
+      'use_serial_mode': true
+    });
+
+    common.resetAllStatic();
+
+    var one = _me._fork();
+    one.__getArguments().should.eql({
+      '0' : 'filename.js',
+      '1' : ['b'],
+      '2' : {
+        'cwd' : __dirname, 'env' : {'test-env' : 'lalal'}
+      }
+    });
+
+    _me.start();
+    _me.running.should.eql(1);
+    Object.keys(_me.pstatus).should.eql(['1', '2', '3']);
+
+    // 测试串行启动模式，主进程的两个初始值 
+    _me.token_pid.should.eql(-1);
+    _me.token_count.should.eql(0);
+
+    one.emit('message', { cmd: 'token_get', pid: one.pid });
+
+    _me.token_pid.should.eql(one.pid);
+    _me.token_count.should.eql(1);
+
+    one.emit('message', { cmd: 'token_get', pid: one.pid });
+
+    one.emit('message', { cmd: 'token_release', pid: one.pid });
+
+    _me.token_pid.should.eql(-1);
+    _me.token_count.should.eql(1);
+
+    // 测试发送令牌后，子进程异常退出的情况
+    one.emit('message', { cmd: 'token_get', pid: one.pid });
+
+    _me.token_pid.should.eql(one.pid);
+    _me.token_count.should.eql(2);
+
+    one.emit('exit');
+
+    _me.token_pid.should.eql(-1);
+
+    done();
+  });
+  /* }}} */
+
 });
 
