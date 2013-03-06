@@ -171,26 +171,26 @@ describe('worker process', function () {
       'terminate_timeout'  : 20,
     }, PROCESS);
 
-    var test = '';
-    var get_token_timeout = 100;
+    var txt = '';
+    var GET_TOKEN_TIMEOUT = 100;
 
-    _me.serialStart(function(done){      
-      test = 'child start!';
+    _me.serialStart(function (done) {      
+      txt = 'child start!';
       done();
-    }, get_token_timeout);
+    }, GET_TOKEN_TIMEOUT);
 
-    PROCESS.emit('message', {'token': -1});
+    PROCESS.emit('message', {'token' : -1});
 
-    setTimeout(function(){
-      test.should.eql('');
+    setTimeout(function () {
+      txt.should.eql('');
 
-      PROCESS.emit('message', {'token': 1});
+      PROCESS.emit('message', {'token' : 1});
 
-      setTimeout(function(){
-        test.should.eql('child start!');
+      setTimeout(function () {
+        txt.should.eql('child start!');
         _done();
       }, 10);
-    }, get_token_timeout + 1);
+    }, GET_TOKEN_TIMEOUT + 1);
   });
   /* }}} */
 
