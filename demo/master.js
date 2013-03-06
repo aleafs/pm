@@ -21,7 +21,7 @@ app.register('error', __dirname + '/worker/exception.js', {
  */
 app.register('daemon', __dirname + '/worker/daemon.js', {
   'trace_gc': true,
-  'children': 2,
+  'children': 2
 });
 
 /**
@@ -30,6 +30,14 @@ app.register('daemon', __dirname + '/worker/daemon.js', {
 app.register('http', __dirname + '/worker/http.js', {
   'listen' : [ 33749, __dirname + '/http.socket' ],
   'children' : 1
+});
+
+/**
+ * process serial start
+ */
+app.register('serial', __dirname + '/worker/serial.js', {
+  'children': 2,
+  'use_serial_mode': true
 });
 
 app.dispatch();
