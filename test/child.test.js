@@ -233,30 +233,42 @@ describe('child manager', function () {
     Object.keys(_me.pstatus).should.eql(['1', '2', '3']);
 
     // 测试串行启动模式，主进程的两个初始值 
-    _me.token_pid.should.eql(-1);
-    _me.token_count.should.eql(0);
+    _me.tokenPid.should.eql(-1);
+    _me.tokenCount.should.eql(0);
 
-    one.emit('message', { cmd: 'token_get', pid: one.pid });
+    one.emit('message', {
+      cmd : 'token_get', 
+      pid : one.pid
+    });
 
-    _me.token_pid.should.eql(one.pid);
-    _me.token_count.should.eql(1);
+    _me.tokenPid.should.eql(one.pid);
+    _me.tokenCount.should.eql(1);
 
-    one.emit('message', { cmd: 'token_get', pid: one.pid });
+    one.emit('message', {
+      cmd : 'token_get', 
+      pid : one.pid
+    });
 
-    one.emit('message', { cmd: 'token_release', pid: one.pid });
+    one.emit('message', {
+      cmd : 'token_release', 
+      pid : one.pid
+    });
 
-    _me.token_pid.should.eql(-1);
-    _me.token_count.should.eql(1);
+    _me.tokenPid.should.eql(-1);
+    _me.tokenCount.should.eql(1);
 
     // 测试发送令牌后，子进程异常退出的情况
-    one.emit('message', { cmd: 'token_get', pid: one.pid });
+    one.emit('message', {
+      cmd : 'token_get', 
+      pid : one.pid
+    });
 
-    _me.token_pid.should.eql(one.pid);
-    _me.token_count.should.eql(2);
+    _me.tokenPid.should.eql(one.pid);
+    _me.tokenCount.should.eql(2);
 
     one.emit('exit');
 
-    _me.token_pid.should.eql(-1);
+    _me.tokenPid.should.eql(-1);
 
     done();
   });
