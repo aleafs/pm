@@ -6,6 +6,7 @@ MOCHA = ./node_modules/mocha/bin/mocha
 
 test:
 	@npm install
+	@rm -f test/*.socket
 	@$(MOCHA) --reporter $(REPORTER) --timeout $(TIMEOUT) $(MOCHA_OPTS) $(TESTS)
 
 cov:
