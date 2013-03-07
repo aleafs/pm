@@ -174,6 +174,8 @@ describe('worker process', function () {
     var txt = '';
     var GET_TOKEN_TIMEOUT = 100;
 
+    _me.serialStart(txt, GET_TOKEN_TIMEOUT);
+
     _me.serialStart(function (done) {      
       txt = 'child start!';
       done();
@@ -188,6 +190,8 @@ describe('worker process', function () {
 
       setTimeout(function () {
         txt.should.eql('child start!');
+
+        PROCESS.emit('message', {'test' : ''});
         _done();
       }, 10);
     }, GET_TOKEN_TIMEOUT + 1);
