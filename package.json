@@ -14,10 +14,12 @@
     "node": ">=0.6.9"
   },
   "devDependencies": {
+    "graceful": ">=0.0.3",
     "should": ">=0.4.2",
     "mocha": ">=0.9.0",
     "rewire": "*",
-    "visionmedia-jscoverage" : ">=1.0.0"
+    "mm": "*",
+    "jscover" : ">=0.2.4"
   },
   "main"  : "./index.js",
   "scripts": {

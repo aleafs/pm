@@ -5,8 +5,8 @@
 var http = require('http');
 var net = require('net');
 var should = require('should');
-
-var common = require(__dirname + '/../lib/common.js');
+var libdir = process.env.PM_COV ? '../lib-cov' : '../lib';
+var common = require(libdir + '/common.js');
 
 describe('common functions', function () {
 
@@ -14,7 +14,9 @@ describe('common functions', function () {
     should.ok(!common.getHandle('/i/am/denied.socket'));
   });
 
-  [33046, '33046', __dirname + '/a.socket'].forEach(function (idx) {
+  var sock = __dirname + '/' + process.version + '.a.socket';
+
+  [33046, '33046', sock].forEach(function (idx) {
     it('listen at: ' + idx, function (done) {
       var _me = http.createServer(function (req, res) {
         res.end(req.url);

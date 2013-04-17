@@ -18,6 +18,14 @@ var s2 = require('http').createServer(function (req, res) {
       worker.broadcast('daemon', 'fatal');
       break;
 
+    case 'disconnect':
+      console.log('[worker:%s] disconnected', process.pid);
+      worker.disconnect();
+      setTimeout(function () {
+        process.exit(1);
+      }, 3000);
+      break;
+
       /*
     case 'reload':
       worker.reload('daemon');
@@ -30,6 +38,7 @@ var s2 = require('http').createServer(function (req, res) {
   res.end(JSON.stringify({
     'act' : url,
     'url' : req.url,
+    pid: process.pid,
   }));
 });
 

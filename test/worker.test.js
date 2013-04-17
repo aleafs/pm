@@ -6,9 +6,9 @@ var net = require('net');
 var http = require('http');
 var should = require('should');
 var Common = require(__dirname + '/mock.js');
-var worker = require(__dirname + '/../lib/worker.js');
-
-var _Handle = require(__dirname + '/../lib/common.js').getHandle;
+var libdir = process.env.PM_COV ? '../lib-cov' : '../lib';
+var worker = require(libdir + '/worker.js');
+var _Handle = require(libdir + '/common.js').getHandle;
 
 var PROCESS;
 beforeEach(function (done) {
@@ -148,7 +148,7 @@ describe('worker process', function () {
       'terminate_timeout'  : 20,
     }, PROCESS);
 
-    var _fn = __dirname + '/a.socket';
+    var _fn = __dirname + '/' + process.version + '.a.socket';
     PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle(_fn));
     _me.ready();
 
@@ -197,5 +197,61 @@ describe('worker process', function () {
     }, GET_TOKEN_TIMEOUT + 1);
   });
   /* }}} */
+
+  describe('disconnect()', function () {
+    it('should disconnect and close all listeners', function (done) {
+      var w = worker.create({
+        heartbeat_interval: 1000,
+        terminate_timeout: 20,
+      }, PROCESS);
+
+      var web = http.createServer(function (req, res) {
+        if (req.url === '/disconnect') {
+          w.disconnect();
+        }
+        res.setHeader('x-url', req.url);
+        res.end(req.url);
+      });
+
+      PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('33046'));
+
+      /**
+       * @ 默认处理，连接就断掉
+       */
+      w.ready(function (socket, which) {
+        if ('a' === which) {
+          web.emit('connection', socket);
+        }
+      });
+
+      var options = {
+        'host' : 'localhost', 'port' : 33046, 'path' : '/normal-request'
+      };
+
+      http.get(options, function (res) {
+        res.should.have.header('x-url', '/normal-request');
+      });
+
+      w.once('listen', function (which) {
+        http.get(options, function (res) {
+          res.should.have.header('x-url', '/normal-request');
+        });
+
+        options.path = '/disconnect';
+        http.get(options, function (res) {
+          res.should.have.header('x-url', '/disconnect');
+          setTimeout(function () {
+            var msgs = PROCESS.__getOutMessage();
+            var disconnectMsg = msgs[1][0];
+            disconnectMsg.type.should.equal('disconnect');
+            disconnectMsg.data.suicide.should.equal(true);
+            done();
+          }, 10);
+        });
+
+      });
+    });
+
+  });
 
 });
