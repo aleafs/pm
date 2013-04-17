@@ -86,10 +86,12 @@ Below is the output from `git-summary`
 
 ```
  project: pm
- commits: 78
- files  : 23
+ commits: 91
+ files  : 27
  authors: 
-   78	aleafs                  100.0%
+    86	aleafs                  94.5%
+     4	wanglang                4.4%
+     1	fengmk2                 1.1%
 
 ```
 
