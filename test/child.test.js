@@ -2,36 +2,47 @@
 
 "use strict";
 
-var rewire = require('rewire');
+var mm = require('mm');
+var child_process = require('child_process');
+var fs = require('fs');
+var path = require('path');
+fs.existsSync = fs.existsSync || path.existsSync;
 var should = require('should');
 var common = require(__dirname + '/mock.js');
-
-var Child = rewire(__dirname + '/../lib/child.js');
-
-var PROCESS;
-beforeEach(function () {
-
-  common.resetAllStatic();
-
-  PROCESS = common.mockProcess();
-  PROCESS.makesureCleanAllMessage();
-  PROCESS.__getOutMessage().should.eql([]);
-  PROCESS.__getEvents().should.eql([]);
-
-  var sub = common.mockFork();
-  sub.makesureCleanAllMessage;
-  Child.__set__({
-    'PROCESS' : PROCESS,
-    'fork'  : common.mockFork,
-  });
-});
+var libdir = process.env.PM_COV ? '../lib-cov' : '../lib';
+var Child = require(libdir + '/child.js');
 
 describe('child manager', function () {
 
+  var PROCESS;
+  beforeEach(function () {
+
+    common.resetAllStatic();
+
+    PROCESS = common.mockProcess();
+    PROCESS.makesureCleanAllMessage();
+    PROCESS.__getOutMessage().should.eql([]);
+    PROCESS.__getEvents().should.eql([]);
+
+    var sub = common.mockFork();
+    sub.makesureCleanAllMessage;
+    Child.mock(PROCESS);
+    mm(child_process, 'fork', common.mockFork);
+  });
+
+  afterEach(function () {
+    mm.restore();
+  });
+
   /* {{{ should_public_method_works_fine() */
   it('should_public_method_works_fine', function (_done) {
+    var sock = __dirname + '/' + process.version + '.a.socket';
+    if (fs.existsSync(sock)) {
+      fs.unlinkSync(sock);
+    }
     var _me = Child.create(['filename.js', 'b'], {
-      'listen' : __dirname + '/a.socket,,33047', 'children' : 3,
+      'listen' : sock + ',,33047', 
+      'children' : 3,
     });
 
     var _messages = [];

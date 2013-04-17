@@ -2,11 +2,13 @@
 
 "use strict";
 
+var mm = require('mm');
 var fs = require('fs');
-var rewire = require('rewire');
 var should = require('should');
 var common = require(__dirname + '/mock.js');
-var master = rewire(__dirname + '/../lib/master.js');
+var libdir = process.env.PM_COV ? '../lib-cov' : '../lib';
+var child = require(libdir + '/child.js');
+var master = require(libdir + '/master.js');
 
 var PROCESS;
 
@@ -19,16 +21,18 @@ describe('master', function () {
     PROCESS.__getOutMessage().should.eql([]);
     PROCESS.__getEvents().should.eql([]);
 
-    master.__set__({
-      'PROCESS' : PROCESS,
-      'CreateChild' : common.mockChild,
-    });
+    master.mock(PROCESS);
+    mm(child, 'create', common.mockChild);
 
     var cmd = require('util').format('rm -rf "%s/tmp"', __dirname);
     require('child_process').exec(cmd, function (e) {
       should.ok(!e);
       done();
     });
+  });
+
+  afterEach(function () {
+    mm.restore();
   });
 
   var pidfile = __dirname + '/tmp/a.pid';
