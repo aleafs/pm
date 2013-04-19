@@ -14,11 +14,14 @@ var graceful = require('graceful');
 var worker = require('../../').createWorker();
 var server = require('./app');
 
+// hack for pm, because server._handle is empty.
+server.close = function () {};
+
 graceful({
   server: server,
+  worker: worker,
   error: function (err) {
     console.log('[%s] [worker:%s] error: %s', new Date(), process.pid, err.stack);
-    worker.disconnect();
   },
   killTimeout: 10000,
 });
