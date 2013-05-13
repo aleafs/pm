@@ -2,7 +2,7 @@
 
 var worker = require(__dirname + '/../../').createWorker();
 worker.on('message', function (msg, from, pid) {
-  console.log('Got message "%s" from %s by %d', msg, fromm, pid);
+  console.log('Got message "%s" from %s by %d', msg, from, pid);
   switch (msg.toString()) {
     case 'fatal':
       process.exit(127);
