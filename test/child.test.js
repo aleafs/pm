@@ -9,8 +9,7 @@ var path = require('path');
 fs.existsSync = fs.existsSync || path.existsSync;
 var should = require('should');
 var common = require(__dirname + '/mock.js');
-var libdir = process.env.PM_COV ? '../lib-cov' : '../lib';
-var Child = require(libdir + '/child.js');
+var Child = require('../lib/child.js');
 
 describe('child manager', function () {
 
