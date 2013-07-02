@@ -3,7 +3,7 @@
   "version": "2.2.1",
   "author": "Aleafs Zhang (zhangxc83@gmail.com)",
   "contributors": [
-    {"name": "fengmk2", "email": "fengmk2@gmail.com", "web": "http://fengmk2.github.com"} 
+    {"name": "fengmk2", "email": "fengmk2@gmail.com", "web": "http://fengmk2.github.com"}
   ],
   "homepage": "https://github.com/aleafs/pm",
   "repository": "git://github.com/aleafs/pm.git",
@@ -26,11 +26,11 @@
   "main"  : "./index.js",
   "scripts": {
     "test": "make test",
-    "blanket": { 
-      "pattern": "/pm/lib" 
+    "blanket": {
+      "pattern": "/pm/lib"
     },
-    "travis-cov": { 
-      "threshold": 87 
+    "travis-cov": {
+      "threshold": 98
     }
   }
 }
