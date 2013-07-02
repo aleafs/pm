@@ -6,9 +6,8 @@ var mm = require('mm');
 var fs = require('fs');
 var should = require('should');
 var common = require(__dirname + '/mock.js');
-var libdir = process.env.PM_COV ? '../lib-cov' : '../lib';
-var child = require(libdir + '/child.js');
-var master = require(libdir + '/master.js');
+var child = require('../lib/child.js');
+var master = require('../lib/master.js');
 
 var PROCESS;
 

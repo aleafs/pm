@@ -5,8 +5,7 @@
 var http = require('http');
 var net = require('net');
 var should = require('should');
-var libdir = process.env.PM_COV ? '../lib-cov' : '../lib';
-var common = require(libdir + '/common.js');
+var common = require('../lib/common.js');
 
 describe('common functions', function () {
 
