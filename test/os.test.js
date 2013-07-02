@@ -5,8 +5,7 @@
 var fs = require('fs');
 var mm = require('mm');
 var should = require('should');
-var libdir = process.env.PM_COV ? '../lib-cov' : '../lib';
-var os = require(libdir + '/os.js');
+var os = require('../lib/os.js');
 
 describe('os patch for linux', function () {
 

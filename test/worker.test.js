@@ -6,9 +6,8 @@ var net = require('net');
 var http = require('http');
 var should = require('should');
 var Common = require(__dirname + '/mock.js');
-var libdir = process.env.PM_COV ? '../lib-cov' : '../lib';
-var worker = require(libdir + '/worker.js');
-var _Handle = require(libdir + '/common.js').getHandle;
+var worker = require('../lib/worker.js');
+var _Handle = require('../lib/common.js').getHandle;
 
 var PROCESS;
 beforeEach(function (done) {
