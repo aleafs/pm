@@ -2,12 +2,24 @@
 
 "use strict";
 
+var fs = require('fs');
 var net = require('net');
 var http = require('http');
 var should = require('should');
 var Common = require(__dirname + '/mock.js');
 var worker = require('../lib/worker.js');
 var _Handle = require('../lib/common.js').getHandle;
+
+var cleanSocketFiles  = function (path, callback) {
+  fs.readdir(path, function (err, res) {
+    (res || []).forEach(function (fn) {
+      if (String(fn).match(/\.socket$/)) {
+        fs.unlinkSync(path + '/' + fn);
+      }
+    });
+    callback(err);
+  });
+};
 
 var PROCESS;
 beforeEach(function (done) {
@@ -17,7 +29,12 @@ beforeEach(function (done) {
   PROCESS.makesureCleanAllMessage();
   PROCESS.__getOutMessage().should.eql([]);
   PROCESS.__getEvents().should.eql([]);
-  done();
+
+  cleanSocketFiles(__dirname, done);
+});
+
+afterEach(function (done) {
+  cleanSocketFiles(__dirname, done);
 });
 
 describe('worker process', function () {
@@ -212,7 +229,7 @@ describe('worker process', function () {
         res.end(req.url);
       });
 
-      PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('33046'));
+      PROCESS.emit('message', {'type' : 'listen', 'data' : 'a'}, _Handle('43119'));
 
       /**
        * @ 默认处理，连接就断掉
@@ -224,7 +241,7 @@ describe('worker process', function () {
       });
 
       var options = {
-        'host' : 'localhost', 'port' : 33046, 'path' : '/normal-request'
+        'host' : 'localhost', 'port' : 43119, 'path' : '/normal-request'
       };
 
       http.get(options, function (res) {

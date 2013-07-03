@@ -2,10 +2,30 @@
 
 "use strict";
 
+var fs = require('fs');
 var http = require('http');
 var net = require('net');
 var should = require('should');
 var common = require('../lib/common.js');
+
+var cleanSocketFiles  = function (path, callback) {
+  fs.readdir(path, function (err, res) {
+    (res || []).forEach(function (fn) {
+      if (String(fn).match(/\.socket$/)) {
+        fs.unlinkSync(path + '/' + fn);
+      }
+    });
+    callback(err);
+  });
+};
+
+beforeEach(function (done) {
+  cleanSocketFiles(__dirname, done);
+});
+
+afterEach(function (done) {
+  cleanSocketFiles(__dirname, done);
+});
 
 describe('common functions', function () {
 
