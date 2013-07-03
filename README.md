@@ -1,4 +1,5 @@
 [![Build Status](https://secure.travis-ci.org/aleafs/pm.png?branch=master)](http://travis-ci.org/aleafs/pm)
+[![Coverage Status](https://coveralls.io/repos/aleafs/pm/badge.png)](https://coveralls.io/r/aleafs/pm)
 [![Dependency Status](https://gemnasium.com/aleafs/pm.png)](https://gemnasium.com/aleafs/pm)
 
 jscoverage: [**100%**](http://aleafs.github.com/coverage/pm2.html)
