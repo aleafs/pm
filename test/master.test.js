@@ -129,12 +129,12 @@ describe('master', function () {
       fs.readFile(_fn, 'utf8', function (e,d) {
         should.ok(!e);
         var d = d.split('\n');
-        d.length.should.above(4);
+        d.length.should.above(2);
         d.should.include(process.pid + ':\tgroup1\tpid\t{"k1":"aaa"}');
         d.should.include(process.pid + ':\tgroup2\tpid\t{"k1":"aaa"}');
         done();
       });
-    }, 50);
+    }, 70);
   });
   /* }}} */
 
