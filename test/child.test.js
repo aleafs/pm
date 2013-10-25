@@ -72,7 +72,11 @@ describe('child manager', function () {
       '0' : 'filename.js',
       '1' : ['b'],
       '2' : {
-        'cwd' : __dirname, 'env' : {'test-env' : 'lalal'}
+        'cwd' : __dirname, 
+        'env' : {
+          'test-env' : 'lalal',
+          PM_WORKER_INDEX: 0
+        }
       }
     });
 
@@ -234,7 +238,7 @@ describe('child manager', function () {
       '0' : 'filename.js',
       '1' : ['b'],
       '2' : {
-        'cwd' : __dirname, 'env' : {'test-env' : 'lalal'}
+        'cwd' : __dirname, 'env' : {'test-env' : 'lalal', PM_WORKER_INDEX: 0}
       }
     });
 
