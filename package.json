@@ -26,7 +26,9 @@
   },
   "main"  : "./index.js",
   "scripts": {
-    "test": "make test",
+    "test": "make test"
+  },
+  "config" : {
     "blanket": {
       "pattern": "/pm/lib"
     },
