@@ -27,7 +27,7 @@ app.on('quit', function () {
  * @ test fork error protect
  */
 app.register('error', __dirname + '/worker/exception.js', {
-  'children' : 1
+  'children' : -1
 });
 
 /**

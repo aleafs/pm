@@ -1,6 +1,6 @@
 {
   "name": "pm",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "author": "Aleafs Zhang (zhangxc83@gmail.com)",
   "contributors": [
     {"name": "fengmk2", "email": "fengmk2@gmail.com", "web": "http://fengmk2.github.com"}
@@ -11,7 +11,7 @@
   "keywords": [ "process manager", "cluster", "child-process", "master-worker" ],
   "dependencies": {},
   "engines": {
-    "node": ">=0.6.9"
+    "node": ">=0.9"
   },
   "devDependencies": {
     "graceful": ">=0.0.3",
@@ -26,7 +26,9 @@
   },
   "main"  : "./index.js",
   "scripts": {
-    "test": "make test",
+    "test": "make test"
+  },
+  "config" : {
     "blanket": {
       "pattern": "/pm/lib"
     },
