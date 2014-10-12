@@ -50,7 +50,7 @@ describe('worker process', function () {
     _me.broadcast('who', 'test msg');
     PROCESS.__getOutMessage().pop().should.eql([{
       'type' : 'broadcast',
-      'data' : {'who' : 'who', 'msg' : 'test msg'}
+      'data' : {'who' : 'who', 'pid' : 0, 'msg' : 'test msg'}
     }, undefined]);
 
     _me.ready(function (client, which) {
