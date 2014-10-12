@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "graceful": ">=0.0.3",
-    "should": ">=0.4.2",
+    "should": ">=3.0.1",
     "mocha": ">=0.9.0",
     "rewire": "*",
     "mm": "*",

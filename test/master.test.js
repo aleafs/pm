@@ -52,7 +52,7 @@ describe('master', function () {
         fs.writeFileSync(pidfile, PROCESS.pid);
         PROCESS.emit('exit');
         fs.readFile(pidfile, 'utf8', function (e, d) {
-          e.message.should.include('ENOENT, open');
+          e.message.should.containEql('ENOENT, open');
           done();
         });
       });
@@ -130,8 +130,8 @@ describe('master', function () {
         should.ok(!e);
         var d = d.split('\n');
         d.length.should.above(2);
-        d.should.include(process.pid + ':\tgroup1\tpid\t{"k1":"aaa"}');
-        d.should.include(process.pid + ':\tgroup2\tpid\t{"k1":"aaa"}');
+        d.should.containEql(process.pid + ':\tgroup1\tpid\t{"k1":"aaa"}');
+        d.should.containEql(process.pid + ':\tgroup2\tpid\t{"k1":"aaa"}');
         done();
       });
     }, 70);

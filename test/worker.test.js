@@ -104,11 +104,11 @@ describe('worker process', function () {
     });
 
     var done = function () {
-      msg.should.include(JSON.stringify(['Fuck GFW', 'FBX', -1]));
-      msg.should.include(JSON.stringify(['suicide', 'SIGTERM']));
-      msg.should.include(JSON.stringify(['suicide', 'message']));
-      msg.should.include(JSON.stringify(['listen', 'a']));
-      msg.should.include('exit');
+      msg.should.containEql(JSON.stringify(['Fuck GFW', 'FBX', -1]));
+      msg.should.containEql(JSON.stringify(['suicide', 'SIGTERM']));
+      msg.should.containEql(JSON.stringify(['suicide', 'message']));
+      msg.should.containEql(JSON.stringify(['listen', 'a']));
+      msg.should.containEql('exit');
       _done();
     };
 
@@ -245,17 +245,17 @@ describe('worker process', function () {
       };
 
       http.get(options, function (res) {
-        res.should.have.header('x-url', '/normal-request');
+        res.headers.should.have.property('x-url', '/normal-request');
       });
 
       w.once('listen', function (which) {
         http.get(options, function (res) {
-          res.should.have.header('x-url', '/normal-request');
+          res.headers.should.have.property('x-url', '/normal-request');
         });
 
         options.path = '/disconnect';
         http.get(options, function (res) {
-          res.should.have.header('x-url', '/disconnect');
+          res.headers.should.have.property('x-url', '/disconnect');
           setTimeout(function () {
             var msgs = PROCESS.__getOutMessage();
             var disconnectMsg = msgs[1][0];
