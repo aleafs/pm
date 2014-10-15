@@ -1,5 +1,6 @@
 [![Build Status](https://secure.travis-ci.org/aleafs/pm.png?branch=master)](http://travis-ci.org/aleafs/pm)
 [![Coverage Status](https://coveralls.io/repos/aleafs/pm/badge.png?branch=master)](https://coveralls.io/r/aleafs/pm?branch=master)
+[![npm download](https://img.shields.io/npm/dm/pm.svg?style=flat-square)](https://npmjs.org/package/pm)
 
 ## About
 
