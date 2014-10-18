@@ -2,7 +2,7 @@
 
 var worker = require(__dirname + '/../../').createWorker();
 worker.on('message', function (msg, from, pid) {
-  console.log('Got message "%s" from %s by %d', msg, from, pid);
+  console.log('[%d]: Got message "%s" from %s by %d', process.pid, msg, from, pid);
   switch (msg.toString()) {
     case 'fatal':
       process.exit(127);
@@ -14,7 +14,3 @@ worker.on('message', function (msg, from, pid) {
 });
 
 worker.ready();
-setInterval(function() {
-  console.log('i am alive ... ' + (new Date()));
-}, 5000);
-

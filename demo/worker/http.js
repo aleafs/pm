@@ -8,10 +8,14 @@ var s1 = require('http').createServer(function (req, res) {
 
 var s2 = require('http').createServer(function (req, res) {
 
-  var url = req.url.split('?').shift().split('/')[1].toLowerCase();
-  switch (url) {
+  var url = req.url.split('?').shift().split('/').filter(function (x) {
+    return x.length;
+  });
+  var act = url.shift().toLowerCase();
+
+  switch (act) {
     case 'cleancache':
-      worker.broadcast('daemon', 'Please clean your cache');
+      worker.broadcast('daemon', 'Please clean your cache', url.shift());
       break;
 
     case 'fatal':
