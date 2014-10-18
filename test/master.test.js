@@ -85,7 +85,7 @@ describe('master', function () {
     _p2.emit('giveup', 10, 600);
 
     _p2.emit('broadcast', 'A1', 'hello', 3);
-    _p2.__getMessages().pop().should.eql(['broadcast', {'0' : 'hello', '1' : 'a1', '2' : 3}]);
+    _p2.__getMessages().pop().should.eql(['broadcast', {'0' : 'hello', '1' : 'a1', '2' : 3, '3' : undefined}]);
 
     _me.dispatch();
     _p2.__getMessages().pop().should.eql(['start', {}]);
