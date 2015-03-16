@@ -4,3 +4,5 @@ coverage.html
 *.log
 *.swp
 lib-cov
+.DS_Store
+.idea/
