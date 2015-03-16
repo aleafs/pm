@@ -57,7 +57,8 @@ var app = require('pm').createMaster({
 });
 
 app.register('group1', __dirname + '/http.js', {
- 'listen' : [8080, 8081]
+ 'listen' : [8080, 8081], 
+ 'addr': '127.0.0.1' // it uses '0.0.0.0' by default
 });
 
 app.on('giveup', function (name, num, pause) {
