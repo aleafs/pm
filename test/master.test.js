@@ -52,7 +52,7 @@ describe('master', function () {
         fs.writeFileSync(pidfile, PROCESS.pid);
         PROCESS.emit('exit');
         fs.readFile(pidfile, 'utf8', function (e, d) {
-          e.message.should.containEql('ENOENT, open');
+          e.message.should.containEql('ENOENT');
           done();
         });
       });
@@ -74,7 +74,7 @@ describe('master', function () {
     var _p1 = _me.register('A1', 'a1.js');
     var _p2 = _me.register('A1', 'a2.js', {'trace_gc' : true});
 
-    _p1.__getMessages().pop().should.eql(['stop', {'0' : 'SIGKILL'}]);
+    _p1.__getMessages().pop().should.eql(['stop', ['SIGKILL']]);
 
     /**
      * @ 实际上需要remove掉这个listener

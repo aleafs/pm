@@ -68,17 +68,17 @@ describe('child manager', function () {
     common.resetAllStatic();
 
     var one = _me._fork();
-    one.__getArguments().should.eql({
-      '0' : 'filename.js',
-      '1' : ['b'],
-      '2' : {
+    one.__getArguments().should.eql([
+      'filename.js',
+      ['b'],
+      {
         'cwd' : __dirname, 
         'env' : {
           'test-env' : 'lalal',
           PM_WORKER_INDEX: 0
         }
       }
-    });
+    ]);
 
     _me.start();
     _me.running.should.eql(1);
@@ -234,13 +234,13 @@ describe('child manager', function () {
     common.resetAllStatic();
 
     var one = _me._fork();
-    one.__getArguments().should.eql({
-      '0' : 'filename.js',
-      '1' : ['b'],
-      '2' : {
+    one.__getArguments().should.eql([
+      'filename.js',
+      ['b'],
+      {
         'cwd' : __dirname, 'env' : {'test-env' : 'lalal', PM_WORKER_INDEX: 0}
       }
-    });
+    ]);
 
     _me.start();
     _me.running.should.eql(1);
