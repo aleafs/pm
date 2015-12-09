@@ -67,7 +67,7 @@ describe('master', function () {
     var _messages = [];
     ['fork', 'quit', 'giveup', 'signal'].forEach(function (i) {
       _me.on(i, function () {
-        _messages.push([i, arguments]);
+        _messages.push([i, Array.prototype.slice.call(arguments)]);
       });
     });
 
@@ -85,32 +85,32 @@ describe('master', function () {
     _p2.emit('giveup', 10, 600);
 
     _p2.emit('broadcast', 'A1', 'hello', 3);
-    _p2.__getMessages().pop().should.eql(['broadcast', {'0' : 'hello', '1' : 'a1', '2' : 3, '3' : undefined}]);
+    _p2.__getMessages().pop().should.eql(['broadcast', ['hello', 'a1', 3, undefined]]);
 
     _me.dispatch();
-    _p2.__getMessages().pop().should.eql(['start', {}]);
+    _p2.__getMessages().pop().should.eql(['start', []]);
     _me.shutdown();
-    _p2.__getMessages().pop().should.eql(['stop', {'0' : 'SIGTERM'}]);
+    _p2.__getMessages().pop().should.eql(['stop', ['SIGTERM']]);
 
     PROCESS.emit('SIGHUB');
     PROCESS.emit('SIGUSR1');
-    _p2.__getMessages().pop().should.eql(['reload', {}]);
+    _p2.__getMessages().pop().should.eql(['reload', []]);
 
     PROCESS.emit('SIGTERM');
-    _p2.__getMessages().pop().should.eql(['stop', {'0' : 'SIGTERM'}]);
+    _p2.__getMessages().pop().should.eql(['stop', ['SIGTERM']]);
 
     PROCESS.emit('SIGINT');
-    _p2.__getMessages().pop().should.eql(['stop', {'0' : 'SIGTERM'}]);
+    _p2.__getMessages().pop().should.eql(['stop', ['SIGTERM']]);
 
     setTimeout(function () {
       _messages.should.eql([
-        ['fork', {'0':'a1','1':1}],
-        ['quit', {'0':'a1','1':1,'2':23,'3':'SIGTERM'}],
-        ['giveup', {'0':'a1','1':10,'2':600}],
-        ['signal', {'0':1, '1':'SIGHUB'}],
-        ['signal', {'0':30,'1':'SIGUSR1'}],
-        ['signal', {'0':15,'1':'SIGTERM'}],
-        ['signal', {'0':2, '1':'SIGINT'}],
+        ['fork', ['a1',1]],
+        ['quit', ['a1',1,23,'SIGTERM']],
+        ['giveup', ['a1',10,600]],
+        ['signal', [1, 'SIGHUB']],
+        ['signal', [30,'SIGUSR1']],
+        ['signal', [15,'SIGTERM']],
+        ['signal', [2, 'SIGINT']],
         ]);
       done();
     }, 20);

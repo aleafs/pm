@@ -81,7 +81,7 @@ exports.mockFork = function () {
   util.inherits(Sub, Emitter);
 
   Sub.prototype.__getArguments = function () {
-    return _arguments;
+    return Array.prototype.slice.call(_arguments);
   };
 
   /**
@@ -129,7 +129,7 @@ exports.mockChild = function () {
 
   ['start', 'stop', 'reload', 'broadcast'].forEach(function (i) {
     Child.prototype[i] = function () {
-      _messages.push([i, arguments]);
+      _messages.push([i, Array.prototype.slice.call(arguments)]);
     };
   });
 
