@@ -2,6 +2,7 @@
   "name": "pm",
   "version": "2.2.6",
   "author": "Aleafs Zhang (zhangxc83@gmail.com)",
+  "license" : "MIT",
   "contributors": [
     {"name": "fengmk2", "email": "fengmk2@gmail.com", "web": "http://fengmk2.github.com"}
   ],
@@ -19,7 +20,7 @@
     "mocha": ">=0.9.0",
     "rewire": "*",
     "mm": "*",
-    "blanket": "*",
+    "blanket": "=1.1.*",
     "coveralls" : "*",
     "travis-cov": "*",
     "mocha-lcov-reporter": "*"
