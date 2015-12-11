@@ -17,10 +17,10 @@
   "devDependencies": {
     "graceful": ">=0.0.3",
     "should": ">=3.0.1",
-    "mocha": ">=0.9.0",
+    "mocha": "=1.21.*",
     "rewire": "*",
     "mm": "*",
-    "blanket": "=1.1.*",
+    "blanket": "=1.1.6",
     "coveralls" : "*",
     "travis-cov": "*",
     "mocha-lcov-reporter": "*"
