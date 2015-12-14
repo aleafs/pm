@@ -1,8 +1,7 @@
 node_modules
-coverage.html
+coverage*
 *.pid
 *.log
 *.swp
-lib-cov
 .DS_Store
 .idea/

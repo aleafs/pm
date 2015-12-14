@@ -20,7 +20,7 @@
     "mocha": "=1.21.*",
     "rewire": "*",
     "mm": "*",
-    "blanket": "=1.1.6",
+    "istanbul": "*",
     "coveralls" : "*",
     "travis-cov": "*",
     "mocha-lcov-reporter": "*"
@@ -30,9 +30,6 @@
     "test": "make test"
   },
   "config" : {
-    "blanket": {
-      "pattern": "/pm/lib"
-    },
     "travis-cov": {
       "threshold": 98
     }
