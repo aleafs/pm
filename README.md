@@ -14,7 +14,7 @@
 
 ## Api
 
-* Visit the [wiki page](https://github.com/aleafs/pm/wiki) to get more infomation about `pm`.
+* Visit the [wiki page](https://github.com/aleafs/pm/wiki) to get more information about `pm`.
 * Also, we supply demo scripts in the code directory [demo](demo).
 
 ## Install
